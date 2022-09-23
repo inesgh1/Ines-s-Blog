@@ -40,7 +40,7 @@ To  set up Pegasus, we need to install Pytorch first. Pytorch is a Python packag
 ``` 
 Running this code should download a bunch of files that look like this. The Pytorch model bin is a pretty large file, so don’t worry if it takes a bit of time to download it.
 
-![image](https://github.com/inesgh1/Paraphrasing-Web-App/blob/main/set_peagasus.png)
+![I and My friends]({{site.baseurl}}/assets/img/set_peagasus.png)
 
 # Access the model
 ``` 

@@ -1,25 +1,21 @@
 title: Hello, world! I'm Ines Gahlouzi
-description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+description: this is a blog that I've decided to create it to share my journey in the data science filed and to share my tutorials and my articals in the tech> # this means to ignore newlines until "baseurl:"
+  
 permalink: ':title/'
 baseurl: "/Ines-s-Blog" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
-site-twitter: #if your site has a twitter account, enter it here
 
 # Author Settings
 author: Ines Gahlouzi # add your name
 author-img: linkedprofile.jpeg # add your photo
 about-author: I am a data science student seeking new challenges. Always hungry to keep learning. # add description
-social-facebook: # add your Facebook handle
 social-github: inesgh1 # add your Github handle
 social-linkedin: https://www.linkedin.com/in/ines-gahlouzi/ # add your Linkedin handle
 social-email: inesgahlouzi11@gmail.com# add your Email address
 
 # Disqus
-discus-identifier: ms-genuis # add your discus identifier
-
+discus-identifier: ms_genuis # add your discus identifier
+comments: true
 # Tracker
 analytics: # Google Analytics
 

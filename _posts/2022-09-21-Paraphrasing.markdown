@@ -1,3 +1,11 @@
+---
+layout: post
+title: Build a Paraphrasing web application using flask and Pegasus model
+date: 2022-09-21 
+description: You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. # Add post description (optional)
+img: how-to-start.jpg # Add image post (optional)
+tags: [Programming, Learn,flask,transformers] # add tag
+---
 # What is Paraphrasing?
 Paraphrasing is the act of writing some text using different words, phrases, and sentence structures without changing its meaning. Paraphrasing is an important technique utilized in writing
 Artificial intelligence is used to automate the process of paraphrasing. There exist many paraphrase tools that can paraphrase text automatically. However, programmers can also directly create a Python program to paraphrase text.

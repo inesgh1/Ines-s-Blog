@@ -4,7 +4,6 @@ description: this is a blog that I've decided to create it to share my journey i
 permalink: ':title/'
 baseurl: "/Ines-s-Blog" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
-site-twitter: #if your site has a twitter account, enter it here
 
 # Author Settings
 author: Ines Gahlouzi # add your name
@@ -16,7 +15,7 @@ social-email: inesgahlouzi11@gmail.com# add your Email address
 
 # Disqus
 discus-identifier: ms_genuis # add your discus identifier
-
+comments: true
 # Tracker
 analytics: # Google Analytics
 

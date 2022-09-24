@@ -1,5 +1,5 @@
 title: Hello, world! I'm Ines Gahlouzi
-description: this is a blog that I've decided to create it to share my journey in the data science filed and to share my tutorials and my articals in the tech> # this means to ignore newlines until "baseurl:"
+description: this is a blog that I've decided to create it to share my journey in the data science filed and to share my tutorials and my articals in the tech # this means to ignore newlines until "baseurl:"
   
 permalink: ':title/'
 baseurl: "/Ines-s-Blog" # the subpath of your site, e.g. /blog
@@ -15,7 +15,7 @@ social-email: inesgahlouzi11@gmail.com# add your Email address
 
 # Disqus
 discus-identifier: ms_genuis # add your discus identifier
-comments: true
+
 # Tracker
 analytics: # Google Analytics
 

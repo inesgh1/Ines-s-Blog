@@ -227,12 +227,38 @@ plt.show()
 
 On peut distinguer à l'oeil quelques tendances suivant les quartiers, certains sont actifs la nuit et d'autres le jour. Mais est-il possible de faire mieux qu'une simple analyse à l'oeil ? 
 
+ Je vous propose une approche complètement automatique pour classifier les différents types de quartier dans Paris, en utilisant l'algorithme des -moyennes.
+### Séries temporelles par quartier
+Le réseau Vélib compte environ 1400 stations et il nous serait difficile de les étudier toutes en même temps. Nous commençons donc par regrouper les données par quartier et par heure.
+```
+# Jointure spatiale : on identifie le quartier de chaque observation
+geo_districts = gpd.sjoin(districts, geo_stations, how="left")
+
+# On aggrège les données par quartier et par heure
+occupation_data = geo_districts.groupby(["l_qu", "time_stamp"], as_index=False).agg({"num_bikes_available":"sum", "geometry": "first"})
+
+occupation_data.head()
+```
+La syntaxe est ici plus compacte que dans le précédent épisode donc nous allons la décortiquer ensemble. Dans un premier, nous groupons les données en fonction de l_qu, le nom du quartier et de time_stamp, c'est-à-dire l'heure d'observation. À l'issue de cette opération, on obtient un objet DataFrameGroupBy. Notez l'option as_index=False qui est nécessaire ici.
+
+Puis nous aggrégeons les données avec la méthode .agg(). En argument, on lui dit qu'on veut sommer le nombre de vélos disponibles dans chaque groupe, et garder la géométrie associée au quartier. On peut ne garder que la première occurence, puisque toutes ces géométries sont identiques.
+
+Nous avons donc l'historique, minute par minute, du nombre de vélibs stationnés dans chaque quartier, que nous pouvons visualiser de la façon suivante:
+```
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+
+fig, ax = plt.subplots(figsize=(8,6))
+
+occupation_data.groupby('l_qu').plot(x="time_stamp", y="num_bikes_available", kind="line", ax=ax, legend=False)
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+
+plt.show()
+```
+![success]({{site.baseurl}}/assets/img/tempo.png)
 
 
-
-
-
-
+Chacune de ces courbes est une ***série temporelle*** qui caractérise l'activité du réseau Vélib dans son quartier. Ce diagramme est un peu brouillon, mais on peut distinguer à l'oeil quelques tendances. Certaines stations semblent se vider en journée quand d'autres semblent se remplir dans le même interval. Mais peut-on faire mieux et de manière automatique ?
 
 
 

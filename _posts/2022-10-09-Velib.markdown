@@ -1,0 +1,18 @@
+---
+layout: post
+title: Analyse des données Velib "Etude de cas"
+date: 2022-10-09
+description: C'est un projet qui etait proposé comme etant un test technique pour le poste stagiaire data scientist
+img: velib.png # Add image post (optional)
+tags: [Programming,K-means,machine learning,interview,data science] # add tag
+---
+Ce projet est a la base un test technique pour le poste stagiare data scientist.
+la 1 ere etape c'est de comprendre le jeu de donnée velib qui est du [opendata-paris](https://opendata.paris.fr/explore/dataset/velib-disponibilite-en-temps-reel/information/?disjunctive.name&disjunctive.is_installed&disjunctive.is_renting&disjunctive.is_returning&disjunctive.nom_arrondissement_communes)
+apres on a...
+
+## Plan
+1. acquisition des données Vélib avec Python et Pandas
+2. Stockage des données
+3. Acquisition des données
+4. Comprendre notre jeu de donnée
+5. Classification automatique non supervisée

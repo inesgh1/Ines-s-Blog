@@ -76,6 +76,7 @@ La commande se lit : j'envoie le DataFrame df_1 vers SQL sous le nom de table lo
 ```
 time_stamp
 ```
+
 ```
 output:Timestamp('2022-10-09 01:38:18.399282')
 ```
@@ -118,4 +119,86 @@ data_localisation[data_localisation["station_id"] == 213688169]
 Cette mystérieuse station se nomme donc Benjamin Godard - Victor Hugo avec une capacité de 35 vélos et nous avons même ses coordonnées géographiques ! On pourrait de la même manière mettre en relation chacune de nos observations avec des sélections, mais ce serait très inefficace. La bonne manière de procéder, bien connue quand on manipule des bases de données, c'est de faire une jointure.
 
 Dit simplement, on va fusionner les deux tables et aligner les lignes qui partagent certaines propriétés. Ici, nous souhaitons mettre en commun les informations sur les stations qui partagent un même identifiant station_id. Il existe plusieurs types de jointures et nous ne nous attarderons pas davantage sur la dénomination exacte. Avec Pandas, la syntaxe est plutôt claire
+```
+data_stations = data_stations.merge(data_localisation, on="station_id")
+
+data_stations
+```
+:confetti_ball: À l'issue de cette fusion, nous disposons d'une table plus grande, avec le même nombre de lignes (et donc d'observations), mais disposant de cinq colonnes supplémentaires issues de la seconde table. Nous avons ici, toutes les données nécessaires pour commencer l'analyse spatiale de ces fameuses données Vélib.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -24,6 +24,33 @@ Plus concrètement, regardons en détail ce que contiennent ces données avec Py
 ```
 import requests
 
-answer = requests.get("https://velib-metropole-opendata.smoove.pro/opendata/Vélib_Metropole/station_information.json").json()
+answer = requests.get("https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_information.json").json()
 print(answer.keys())
 ```
+On obtient en retour un fichier JSON, que l'on peut manipuler comme un dictionnaire Python, avec 3 clefs : lastUpdatedOther l'indication de la date de dernière mise à jour des données, ttl la durée de vie des données avant de devenir obsolète et enfin data les données proprement dîtes.
+
+Pour manipuler ces données, nous allons utiliser le module Pandas. C'est un outil puissant d'analyse de données dont la base est l'objet DataFrame
+
+```
+import pandas as pd
+
+df_1 = pd.DataFrame(answer["data"]["stations"])
+df_1.head()
+```
+On voit que pour chaque station, nous disposons de son nom, de son identifiant unique station_id et de sa position en latitude lat et longitude lon. Ce sont des données à durée de vie longue que nous allons garder sous le bras. On ne s'attend pas à ce que des stations se déplacent ou bien changent de nom toutes les 5 minutes.
+
+Une requête que nous allons effectuer très régulièrement concerne l'occupation des stations :
+```
+answer = requests.get("https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_status.json").json()
+df_2 = pd.DataFrame(answer["data"]["stations"])
+df_2.head()
+```
+Pour chaque station, nous obtenons en temps réel (les données sont mises à jour toutes les minutes) le nombre de vélibs mis à disposition, le nombre de places disponibles et même la décomposition entre le nombre de vélos mécaniques et électriques.
+  Congrats 🎉:Mission accomplie nous avons recuperer les donnée en utilisant API et python.
+  
+  # 2.Stockage des données
+
+
+
+
+

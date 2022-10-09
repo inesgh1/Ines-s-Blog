@@ -158,6 +158,15 @@ stands.hist();
 title("Number of bike stands per station.");
 ```
 ![success]({{site.baseurl}}/assets/img/sb.png)
+Maintenant, on recupere un code postal des adresses en utilisant une expression régulière, et on le stocke dans une nouvelle colonne. On pressente ensuite un **histogramme pour montrer le nombre de stations par zone:**
+```
+import re
+velib_data['postcode'] = velib_data['address'].apply(lambda x: re.findall('\d{5}',x)[0] )
+plt.figure(figsize=(10, 6))
+velib_data.groupby('postcode').size().plot.bar();
+plt.tight_layout()
+```
+![success]({{site.baseurl}}/assets/img/histo.png)
 ### Analyse spatiale
 
 nous allons analyser ces données spatiales en utilisant la librairie GeoPandas. Cette librairie présente beaucoup de similarité avec Pandas. L'objet de base s'appelle un GeoDataFrame, il s'agit d'un DataFrame avec une colonne spéciale nommée geometry qui contient des renseignements géographiques. Cette geometry peut être un point, comme dans le cas présent, mais aussi une ligne pour désigner une frontière ou bien un polygone pour matérialiser un territoire. Nous reviendrons sur ce dernier point dans quelques instants.

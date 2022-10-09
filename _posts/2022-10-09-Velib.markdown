@@ -152,7 +152,12 @@ print("Smallest stations with {0} bike stands:".format(bike_stands_min))
 print(velib_data.query(bike_stands_min_query).address.values)
 ```
 ![success]({{site.baseurl}}/assets/img/stat1.png)
-
+**Nombre de stands par station:**
+```
+stands.hist();
+title("Number of bike stands per station.");
+```
+![success]({{site.baseurl}}/assets/img/sb.png)
 ### Analyse spatiale
 
 nous allons analyser ces données spatiales en utilisant la librairie GeoPandas. Cette librairie présente beaucoup de similarité avec Pandas. L'objet de base s'appelle un GeoDataFrame, il s'agit d'un DataFrame avec une colonne spéciale nommée geometry qui contient des renseignements géographiques. Cette geometry peut être un point, comme dans le cas présent, mais aussi une ligne pour désigner une frontière ou bien un polygone pour matérialiser un territoire. Nous reviendrons sur ce dernier point dans quelques instants.

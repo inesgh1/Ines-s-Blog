@@ -126,18 +126,59 @@ data_stations
 ```
 :confetti_ball: À l'issue de cette fusion, nous disposons d'une table plus grande, avec le même nombre de lignes (et donc d'observations), mais disposant de cinq colonnes supplémentaires issues de la seconde table. Nous avons ici, toutes les données nécessaires pour commencer l'analyse spatiale de ces fameuses données Vélib.
 
+### Analyse spatiale
 
+nous allons analyser ces données spatiales en utilisant la librairie GeoPandas. Cette librairie présente beaucoup de similarité avec Pandas. L'objet de base s'appelle un GeoDataFrame, il s'agit d'un DataFrame avec une colonne spéciale nommée geometry qui contient des renseignements géographiques. Cette geometry peut être un point, comme dans le cas présent, mais aussi une ligne pour désigner une frontière ou bien un polygone pour matérialiser un territoire. Nous reviendrons sur ce dernier point dans quelques instants.
 
+La première étape consiste à convertir notre couple (longitude, latitude) en un object Point reconnu par GeoPandas, puis à créer notre GeoDataFrame.
+```
+import geopandas as gpd
 
+# Convert the longitude and latitude to a format recognized by geoPandas
+geometry = gpd.points_from_xy(data_stations["lon"], data_stations["lat"])
 
+# Create a DataFrame with a geometry containing the Points
+geo_stations = gpd.GeoDataFrame(
+    data_stations, crs="EPSG:4326", geometry=geometry
+)
 
+geo_stations
+```
+L'acronyme crssignifie Coordinate Reference System, c'est une indication du système de projection utilisé. En regardant la documentation Vélib, on voit que le référentiel de projection utilisé est WGS84. C'est le système de projection le plus commun aujourd'hui et il est notamment utilisé par les systèmes de positionnement par satellite GPS. Ce système est référencé 4326 en deux dimensions (X,Y) et 4979 en trois dimensions (X,Y,Z) selon la liste des codes EPSG, et c'est ce que nous donnons comme indication à notre GeoDataFrame.
+### premières cartes
+Avant de faire une carte, nous allons sélectionner des données à un temps fixé, et les enregistrer dans un nouveau GeoDataFrame
+```
+some_time = geo_stations["time_stamp"][0]
+some_data = geo_stations[geo_stations["time_stamp"] == some_time]
 
+some_time
+```
+Maintenant nous allons pouvoir ajouter un fond de carte provenant, par exemple, de OpenStreetMap. Il existe un module python pour faire ça en une ligne et cette librairie magique s'appelle contextily. Le seul pré-requis est de convertir les coordonnées GPS au format EPSG:3857, mais GeoPandas fait ça très bien
+```
+import contextily as ctx
 
+# Conversion des coordonnées
+some_data = some_data.to_crs(epsg=3857)
 
+fig, ax = plt.subplots(figsize=(8, 6))
 
+ax.set_title(some_time.strftime("%A %B %d %H:%M"))
+some_data.plot("num_bikes_available", markersize="num_bikes_available", cmap="OrRd", ax=ax)
+ax.set_axis_off()
 
+# Ajout du fond de carte
+ctx.add_basemap(ax)
 
+plt.show()
+```
+![success]({{site.baseurl}}/assets/img/plot.png)
 
+### Aller plus loin : rassembler les données par quartiers
+L'inconvénient majeur de nos cartes est qu'il est difficile de distinguer et de hiérarchiser les zones à forte concentration de vélibs. La raison en est que les marqueurs ont tendance à se chevaucher et que l'on perd en lisibilité. Pour remédier à ce problème, nous allons rassembler les stations appartenant à un même quartier. Ainsi, nous allons tracer des surfaces sur la carte au lieu d'un nuage de points. La liste des quartiers administratifs de Paris est mise à disposition sur [ le site de la ville de Paris](https://opendata.paris.fr/explore/dataset/quartier_paris/information/?disjunctive.c_ar). GeoPandas sait parfaitement importer les fichiers GeoJSON
+```
+districts = gpd.read_file("quartier_paris.geojson").to_crs(epsg=3857)
+districts
+```
 
 
 

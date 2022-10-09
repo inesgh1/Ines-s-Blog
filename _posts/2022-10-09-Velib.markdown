@@ -11,8 +11,19 @@ la 1 ere etape c'est de comprendre le jeu de donnée velib qui est du [opendata-
 apres on a...
 
 ## Plan
-1. acquisition des données Vélib avec Python et Pandas
+1. Acquisition des données Vélib avec Python et Pandas
 2. Stockage des données
 3. Acquisition des données
 4. Comprendre notre jeu de donnée
 5. Classification automatique non supervisée
+6. Data visualization
+
+# 1.Acquisition des données Vélib avec Python et Pandas
+
+Plus concrètement, regardons en détail ce que contiennent ces données avec Python. Pour ce faire, nous allons utiliser le module requests pour lancer une requête sur l'API de Vélib. Notre première requête porte sur les caractéristiques des stations Vélibs
+```
+import requests
+
+answer = requests.get("https://velib-metropole-opendata.smoove.pro/opendata/Vélib_Metropole/station_information.json").json()
+print(answer.keys())
+```

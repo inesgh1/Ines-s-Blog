@@ -225,7 +225,7 @@ plt.show()
 ```
 ![success]({{site.baseurl}}/assets/img/occupation.png)
 
-
+On peut distinguer à l'oeil quelques tendances suivant les quartiers, certains sont actifs la nuit et d'autres le jour. Mais est-il possible de faire mieux qu'une simple analyse à l'oeil ? 
 
 
 

@@ -260,12 +260,65 @@ plt.show()
 
 Chacune de ces courbes est une ***série temporelle*** qui caractérise l'activité du réseau Vélib dans son quartier. Ce diagramme est un peu brouillon, mais on peut distinguer à l'oeil quelques tendances. Certaines stations semblent se vider en journée quand d'autres semblent se remplir dans le même interval. Mais peut-on faire mieux et de manière automatique ?
 
+### Algorithme des k-moyennes
+La question que l'on se pose est la suivante : "Est-il possible de classer ces séries temporelles de manières automatique ?". La réponse est oui, et pour cela nous allons utiliser l'algorithme des -moyennes. Cet algorithme permet de diviser des données en  partitions. Sa particularité est de pouvoir être mis en place sans supervisition. C'est à dire qu'il va apprendre tout seul à faire la distinction entre les différentes partitions sans que nous ayons besoin d'intervenir, et c'est précisément ce qu'on lui demande.
 
+### Applications aux données temporelles
+Commençons l'analyse en mettant nos données sous la forme de séries temporelles pour la librairie tslearn
+```
+from tslearn.utils import to_time_series_dataset
+from tslearn.preprocessing import TimeSeriesScalerMeanVariance
 
+labels, time_series = [] , []
+for l_qu, group in occupation_data.groupby("l_qu"):
+    labels.append(l_qu)
+    time_series.append(group["num_bikes_available"].array)
 
+# On formatte les séries temporelles
+time_series = to_time_series_dataset(time_series)
+# On normalise ces mêmes séries
+time_series = TimeSeriesScalerMeanVariance().fit_transform(time_series)
 
+time_series.shape
+```
+Rien de particulier ici, si ce n'est que la fonction to_time_series_dataset crée un jeu de données pour tslearn à partir d'un tableau, et que nous normalisons ces données avec l'aide de TimeSeriesScalerMeanVariance qui fait en sorte que chaque série ait pour moyenne  et variance . Cette étape est très importante puisqu'elle permet de s'affranchir de nombreux biais comme le nombre absolu de vélibs par quartier, ou la proportion d'habitants utilisant le réseau.
 
+On peut maintenant lancer l'apprentissage non-supervisé de notre modèle avec l'algorithme des -moyennes
 
+```
+from tslearn.clustering import TimeSeriesKMeans
+n_classes = 3
+
+model = TimeSeriesKMeans(n_clusters=n_classes, metric="euclidean")
+model.fit(time_series)
+TimeSeriesKMeans()
+```
+Visualisons les barycentres (en rouge) et les différents éléments (gris) de chaque classe que notre modèle a trouvé
+```
+import matplotlib.dates as mdates
+
+fig = plt.figure(figsize=(8,n_classes * 3))
+
+# On récupère les dates des différentes observations
+time_labels = occupation_data["time_stamp"].unique()
+
+# Pour chaque classe
+for yi in range(n_classes):
+    ax = fig.add_subplot(n_classes, 1, 1 + yi)
+
+    # On sélectionne les séries qui correspondent à cette classe
+    for xx in time_series[model.labels_ == yi]:
+        ax.plot(time_labels, xx, "k-", alpha=.2)
+
+    # Le barycentre de la classe
+    ax.plot(time_labels, model.cluster_centers_[yi].ravel(), "r-")
+
+    # Pour formatter l'heure des observations
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+
+plt.show()
+```
+![success]({{site.baseurl}}/assets/img/kmeans.png)
 
 
 

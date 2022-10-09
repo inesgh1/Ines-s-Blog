@@ -19,7 +19,6 @@ Ce projet est a la base un test technique pour le poste stagiare data scientist.
 3. Acquisition des données
 4. Comprendre notre jeu de donnée
 5. Classification automatique non supervisée
-6. Data visualization
 
 la 1 ere etape c'est de comprendre le jeu de donnée velib qui est du [opendata-paris](https://opendata.paris.fr/explore/dataset/velib-disponibilite-en-temps-reel/information/?disjunctive.name&disjunctive.is_installed&disjunctive.is_renting&disjunctive.is_returning&disjunctive.nom_arrondissement_communes)
 mais avant on a besoin de recuperer les donnée avec python en utilisant API .

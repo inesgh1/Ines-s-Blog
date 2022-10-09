@@ -1,0 +1,121 @@
+---
+layout: post
+title: Analyse des données Velib "Etude de cas"
+date: 2022-10-09
+description: C'est un projet qui etait proposé comme etant un test technique pour le poste stagiaire data scientist
+img: velib.png # Add image post (optional)
+tags: [Programming,K-means,machine learning,interview,data science] # add tag
+---
+Ce projet est a la base un test technique pour le poste stagiare data scientist.
+la 1 ere etape c'est de comprendre le jeu de donnée velib qui est du [opendata-paris](https://opendata.paris.fr/explore/dataset/velib-disponibilite-en-temps-reel/information/?disjunctive.name&disjunctive.is_installed&disjunctive.is_renting&disjunctive.is_returning&disjunctive.nom_arrondissement_communes)
+apres on a...
+
+## Plan
+1. Acquisition des données Vélib avec Python et Pandas
+2. Stockage des données
+3. Acquisition des données
+4. Comprendre notre jeu de donnée
+5. Classification automatique non supervisée
+6. Data visualization
+
+# 1.Acquisition des données Vélib avec Python et Pandas
+
+Plus concrètement, regardons en détail ce que contiennent ces données avec Python. Pour ce faire, nous allons utiliser le module requests pour lancer une requête sur l'API de Vélib. Notre première requête porte sur les caractéristiques des stations Vélibs
+```
+import requests
+
+answer = requests.get("https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_information.json").json()
+print(answer.keys())
+```
+On obtient en retour un fichier JSON, que l'on peut manipuler comme un dictionnaire Python, avec 3 clefs : lastUpdatedOther l'indication de la date de dernière mise à jour des données, ttl la durée de vie des données avant de devenir obsolète et enfin data les données proprement dîtes.
+
+Pour manipuler ces données, nous allons utiliser le module Pandas. C'est un outil puissant d'analyse de données dont la base est l'objet DataFrame
+
+```
+import pandas as pd
+
+df_1 = pd.DataFrame(answer["data"]["stations"])
+df_1.head()
+```
+On voit que pour chaque station, nous disposons de son nom, de son identifiant unique station_id et de sa position en latitude lat et longitude lon. Ce sont des données à durée de vie longue que nous allons garder sous le bras. On ne s'attend pas à ce que des stations se déplacent ou bien changent de nom toutes les 5 minutes.
+
+Une requête que nous allons effectuer très régulièrement concerne l'occupation des stations :
+```
+answer = requests.get("https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_status.json").json()
+df_2 = pd.DataFrame(answer["data"]["stations"])
+df_2.head()
+```
+Pour chaque station, nous obtenons en temps réel (les données sont mises à jour toutes les minutes) le nombre de vélibs mis à disposition, le nombre de places disponibles et même la décomposition entre le nombre de vélos mécaniques et électriques.
+  Congrats 🎉:Mission accomplie nous avons recuperer les donnée en utilisant API et python.
+  
+  # 2.Stockage des données
+
+Maintenant que nous savons récupérer les données Vélib, nous allons pouvoir les stocker sous la forme d'une base de données persistante SQLITE3. Pour faire simple, il s'agit d'une base de données dite légère (mais puissante !) qui se présente sous la forme d'un simple fichier. C'est un format très pratique pour de petits projets comme le notre ou pour la phase de développement de plus gros projets. Avec Pandas, la procédure est limpide :
+```
+# On supprimse les données inutiles
+del df_1["stationCode"]
+del df_1["rental_methods"]
+del df_2["numBikesAvailable"]
+del df_2["num_bikes_available_types"]
+del df_2["numDocksAvailable"]
+del df_2["is_installed"]
+del df_2["is_returning"]
+del df_2["is_renting"]
+del df_2["last_reported"]
+
+# On crée un marqueur temporel
+time_stamp = pd.Timestamp.now()
+df_2["time_stamp"] = time_stamp
+
+# On enregistre sous forme de base SQLITE
+df_1.to_sql("localisation", "sqlite:///data.db", if_exists="replace")
+df_2.to_sql("stations", "sqlite:///data.db", if_exists="append")
+
+```
+La commande se lit : j'envoie le DataFrame df_1 vers SQL sous le nom de table localisation et dans la base SQLITE data.db. Si la table existe alors on la remplace. Pour les données en temps réel, on ajoute un marqueur temporel qui permet de garder en mémoire l'heure d'acquisition des données. Notez l'option if_exists="append" : à chaque nouvelle acquisition, on ajoute de nouvelles lignes à la table. Concrètement, le marqueur temporel ressemble à ça
+```
+time_stamp
+```
+```
+output:Timestamp('2022-10-09 01:38:18.399282')
+```
+Le marqueur retient la date et l'heure précise à laquelle j'écris ces lignes. Et ce sera la même chose pour nos données d'occupation des stations Vélib.
+
+# 3. Acquisition des données
+Il ne nous reste plus qu'à automatiser l'acquisition de données toutes les minutes. Il existe un module python pour ça qui s'appelle APScheduler. Ce module permet l'automatisation et la planification de tâches, et nous utiliserons l'objet BlockingScheduler. Son utilisation est la suivante :
+```
+from apscheduler.schedulers.blocking import BlockingScheduler
+
+sched = BlockingScheduler()
+
+@sched.scheduled_job("interval", seconds=5)
+def print_date():
+    time_stamp = pd.Timestamp.now()
+    print(time_stamp)
+
+sched.start()
+```
+Avec le décorateur @sched.scheduled_job("interval", seconds=5), on indique que la fonction doit être appelée régulièrement avec un intervalle de temps de 5 secondes.
+
+Nous avons maintenant tous les ingrédients pour lancer une acquisition de données. 
+# 4. Comprendre notre jeu de donnée
+Nous allons maintenant pouvoir jouer avec nos belles données toutes fraiches. Commençons par importer les deux tables dans deux DataFrames distincts
+```
+data_stations = pd.read_sql_table("stations", "sqlite:///database.db")
+data_localisation = pd.read_sql_table("localisation", "sqlite:///database.db")
+
+data_stations.head()
+```
+Notre table stations contient environ 2 millions de lignes, un index et 5 colonnes : le code de la station stationCode, l'identifiant de la station station_id, le nombre de vélos disponibles num_bikes_available, le nombre de bornes libres num_docks_available ainsi que notre marqueur temporel time__stamp.
+
+### Manipulation des données : jointure
+Pour en savoir plus sur une station, il faut faire la correspondance avec notre table localisation. Une première approche serait de faire une sélection sur cette autre table avec notre station_id, et cela fonctionne très bien !
+```
+data_localisation[data_localisation["station_id"] == 213688169]
+```
+![I and My friends]({{site.baseurl}}/assets/img/station.png)
+
+Cette mystérieuse station se nomme donc Benjamin Godard - Victor Hugo avec une capacité de 35 vélos et nous avons même ses coordonnées géographiques ! On pourrait de la même manière mettre en relation chacune de nos observations avec des sélections, mais ce serait très inefficace. La bonne manière de procéder, bien connue quand on manipule des bases de données, c'est de faire une jointure.
+
+Dit simplement, on va fusionner les deux tables et aligner les lignes qui partagent certaines propriétés. Ici, nous souhaitons mettre en commun les informations sur les stations qui partagent un même identifiant station_id. Il existe plusieurs types de jointures et nous ne nous attarderons pas davantage sur la dénomination exacte. Avec Pandas, la syntaxe est plutôt claire
+

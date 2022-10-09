@@ -1,3 +1,11 @@
+---
+layout: post
+title: Build a Ham and spam detector 
+date: 2022-09-19 
+description: this is an end to end project to build a spam and ham detector
+img: sms.png # Add image post (optional)
+tags: [Programming, NLP,machine learning] # add tag
+---
 This project is about building NLP model that detects spam SMS text messages and because it's not fun at all to just build a model and forget about it as 90% of ML models in the world ,I'll be the exception :wink: and I'll deploy my model into an MLOps platform 
 ## Plan 
 - create an NLP model that detects spam SMS text messages
@@ -129,7 +137,7 @@ plt.tight_layout(pad=0)
 plt.show()
 ```
 ==> We got this 'beautiful' wordCloud of the world used in legit messages😜
-![wordcloud](https://github.com/inesgh1/spam_sms_detector/blob/main/word%20map.png)
+![I and My friends]({{site.baseurl}}/assets/img/word%20map.png)
 
 ==> As you can see :eyes: in the legit messages, the most frequent words are will, gt, now, ok, call, want, got, and so on.Next we'll do the same for the spam messages.
 ### Processing the Data
@@ -274,19 +282,7 @@ joblib.dump(vectorizer,'../preprocessing/count_vectorizer.pkl')
 ```
  Congrats 🎉 :tada:  you've build your model now it's deployment time.    
   
-# What is Algorithmia?
-Algorithmia is a MLOps tool that provides a simple and faster way to deploy your machine learning model into production.
 
-Algorithmia specializes in "algorithms as a service". It allows users to create code snippets that run the ML model and host them on Algorithmia. Then you can call your code as an API.
-
-Now your model can be used for different applications of your choice, such as web apps, mobile apps, or e-commerce with a simple API call from Algorithmia.
-Machine learning models created using several computer languages, including R, Python, Java, and Scala, are supported by algorithms. Additionally, it supports well-known deep learning and machine learning frameworks including Keras, Pytorch, Tensorflow, Scikit-Learn, and XGBoost.
-
-In order to minimize costs and increase performance to meet your demands, Algorithmia's serverless Artificial Intelligence layer utilizes both CPUs and GPUs.
-
-Currently, this platform features 4,500 algorithms and over 60,000 developers.
-
-You must take the following six actions in order to deploy your machine learning model on Algorithmia.
     
     
     

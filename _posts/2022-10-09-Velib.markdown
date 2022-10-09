@@ -50,6 +50,61 @@ Pour chaque station, nous obtenons en temps réel (les données sont mises à jo
   
   # 2.Stockage des données
 
+Maintenant que nous savons récupérer les données Vélib, nous allons pouvoir les stocker sous la forme d'une base de données persistante SQLITE3. Pour faire simple, il s'agit d'une base de données dite légère (mais puissante !) qui se présente sous la forme d'un simple fichier. C'est un format très pratique pour de petits projets comme le notre ou pour la phase de développement de plus gros projets. Avec Pandas, la procédure est limpide :
+```
+# On supprimse les données inutiles
+del df_1["stationCode"]
+del df_1["rental_methods"]
+del df_2["numBikesAvailable"]
+del df_2["num_bikes_available_types"]
+del df_2["numDocksAvailable"]
+del df_2["is_installed"]
+del df_2["is_returning"]
+del df_2["is_renting"]
+del df_2["last_reported"]
+
+# On crée un marqueur temporel
+time_stamp = pd.Timestamp.now()
+df_2["time_stamp"] = time_stamp
+
+# On enregistre sous forme de base SQLITE
+df_1.to_sql("localisation", "sqlite:///data.db", if_exists="replace")
+df_2.to_sql("stations", "sqlite:///data.db", if_exists="append")
+
+```
+La commande se lit : j'envoie le DataFrame df_1 vers SQL sous le nom de table localisation et dans la base SQLITE data.db. Si la table existe alors on la remplace. Pour les données en temps réel, on ajoute un marqueur temporel qui permet de garder en mémoire l'heure d'acquisition des données. Notez l'option if_exists="append" : à chaque nouvelle acquisition, on ajoute de nouvelles lignes à la table. Concrètement, le marqueur temporel ressemble à ça
+```
+time_stamp
+```
+```
+output:Timestamp('2022-10-09 01:38:18.399282')
+```
+Le marqueur retient la date et l'heure précise à laquelle j'écris ces lignes. Et ce sera la même chose pour nos données d'occupation des stations Vélib.
+
+# 3. Acquisition des données
+Il ne nous reste plus qu'à automatiser l'acquisition de données toutes les minutes. Il existe un module python pour ça qui s'appelle APScheduler. Ce module permet l'automatisation et la planification de tâches, et nous utiliserons l'objet BlockingScheduler. Son utilisation est la suivante :
+```
+from apscheduler.schedulers.blocking import BlockingScheduler
+
+sched = BlockingScheduler()
+
+@sched.scheduled_job("interval", seconds=5)
+def print_date():
+    time_stamp = pd.Timestamp.now()
+    print(time_stamp)
+
+sched.start()
+```
+Avec le décorateur @sched.scheduled_job("interval", seconds=5), on indique que la fonction doit être appelée régulièrement avec un intervalle de temps de 5 secondes.
+
+Nous avons maintenant tous les ingrédients pour lancer une acquisition de données. 
+# 4. Comprendre notre jeu de donnée
+Nous allons maintenant pouvoir jouer avec nos belles données toutes fraiches. Commençons par importer les deux tables dans deux DataFrames distincts
+
+
+
+
+
 
 
 

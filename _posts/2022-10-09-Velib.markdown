@@ -320,10 +320,37 @@ plt.show()
 ```
 ![success]({{site.baseurl}}/assets/img/kmeans.png)
 
+### Interprétation et visualisation
+Notre algortihme a classé automatiquement tous les quartiers en trois catégories bien distinctes que l'on peut interpréter comme étant :
 
+#### 1. Les quartiers d'affaires qui se remplissent à 9h du matin et se vident aux alentours de 18h
+#### 2. Les quatiers résidentiels qui se remplissent durant la nuit et se vident à 9h
+#### 3. Les quartiers d'activités nocturnes qui sont actifs de 18h à minuit environ
+Maintenant que nous avons déterminé la classe de chaque quartier, nous pouvons l'ajouter à notre liste des quartiers de Paris
+```
+interpretation = ["Affaire", "Résidentiel", "Nocturne"]
 
+classification = pd.DataFrame({"l_qu":labels, "type": [interpretation[classe] for classe in model.labels_] })
+districts_classified = districts.merge(classification, on="l_qu")
 
+districts_classified.head()
+```
+![success]({{site.baseurl}}/assets/img/classement.png)
+Et produire la carte des types de quartiers dans Paris à partir des données Vélibs
+```
+import contextily as ctx
 
+fig, ax = plt.subplots(figsize=(8, 6))
+
+districts_classified = districts_classified.to_crs(epsg=3857)
+
+districts_classified.plot("type", ax=ax, alpha=0.5, edgecolor="white", legend=True)
+ax.set_axis_off()
+ctx.add_basemap(ax)
+
+plt.show()
+```
+![success]({{site.baseurl}}/assets/img/map.png)
 
 
 

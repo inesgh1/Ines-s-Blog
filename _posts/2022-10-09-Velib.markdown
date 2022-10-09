@@ -125,6 +125,26 @@ data_stations = data_stations.merge(data_localisation, on="station_id")
 data_stations
 ```
 :confetti_ball: À l'issue de cette fusion, nous disposons d'une table plus grande, avec le même nombre de lignes (et donc d'observations), mais disposant de cinq colonnes supplémentaires issues de la seconde table. Nous avons ici, toutes les données nécessaires pour commencer l'analyse spatiale de ces fameuses données Vélib.
+### Faisons quelques statistiques de base :
+```
+print("There are {0} Velib stands in Paris".format(velib_data.address.count()))
+print("There are {0} bike stands in total".format(velib_data.bike_stands.sum()))
+print("There are {0} available bikes".format(velib_data.available_bikes.sum()))
+print("There are {0} available bikes stands".format(velib_data.available_bike_stands.sum()))
+print("")
+
+bike_stands_max = velib_data.bike_stands.max()
+bike_stands_max_query = "bike_stands == " + str(bike_stands_max)
+print("Biggest stations with {0} bike stands:".format(bike_stands_max))
+print(velib_data.query(bike_stands_max_query).address.values)
+print("")
+
+bike_stands_min = velib_data.bike_stands.min()
+bike_stands_min_query = "bike_stands == " + str(bike_stands_min)
+print("Smallest stations with {0} bike stands:".format(bike_stands_min))
+print(velib_data.query(bike_stands_min_query).address.values)
+```
+![success]({{site.baseurl}}/assets/img/stat1.png)
 
 ### Analyse spatiale
 

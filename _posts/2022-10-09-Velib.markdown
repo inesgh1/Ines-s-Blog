@@ -7,6 +7,7 @@ img: velib.png # Add image post (optional)
 tags: [Programming,K-means,machine learning,interview,data science] # add tag
 ---
 Ce projet est a la base un test technique pour le poste stagiare data scientist.
+
 **Theme:** Mobilité et Espace Public
 
 **Sujet:** disponibilité des velos en temps reel

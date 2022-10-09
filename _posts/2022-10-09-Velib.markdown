@@ -100,12 +100,22 @@ Avec le décorateur @sched.scheduled_job("interval", seconds=5), on indique que 
 Nous avons maintenant tous les ingrédients pour lancer une acquisition de données. 
 # 4. Comprendre notre jeu de donnée
 Nous allons maintenant pouvoir jouer avec nos belles données toutes fraiches. Commençons par importer les deux tables dans deux DataFrames distincts
+```
+data_stations = pd.read_sql_table("stations", "sqlite:///database.db")
+data_localisation = pd.read_sql_table("localisation", "sqlite:///database.db")
 
+data_stations.head()
+```
+Notre table stations contient environ 2 millions de lignes, un index et 5 colonnes : le code de la station stationCode, l'identifiant de la station station_id, le nombre de vélos disponibles num_bikes_available, le nombre de bornes libres num_docks_available ainsi que notre marqueur temporel time__stamp.
 
+### Manipulation des données : jointure
+Pour en savoir plus sur une station, il faut faire la correspondance avec notre table localisation. Une première approche serait de faire une sélection sur cette autre table avec notre station_id, et cela fonctionne très bien !
+```
+data_localisation[data_localisation["station_id"] == 213688169]
+```
+![I and My friends]({{site.baseurl}}/assets/img/station.png)
 
+Cette mystérieuse station se nomme donc Benjamin Godard - Victor Hugo avec une capacité de 35 vélos et nous avons même ses coordonnées géographiques ! On pourrait de la même manière mettre en relation chacune de nos observations avec des sélections, mais ce serait très inefficace. La bonne manière de procéder, bien connue quand on manipule des bases de données, c'est de faire une jointure.
 
-
-
-
-
+Dit simplement, on va fusionner les deux tables et aligner les lignes qui partagent certaines propriétés. Ici, nous souhaitons mettre en commun les informations sur les stations qui partagent un même identifiant station_id. Il existe plusieurs types de jointures et nous ne nous attarderons pas davantage sur la dénomination exacte. Avec Pandas, la syntaxe est plutôt claire
 

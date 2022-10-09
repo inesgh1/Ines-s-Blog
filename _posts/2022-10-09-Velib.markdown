@@ -7,18 +7,25 @@ img: velib.png # Add image post (optional)
 tags: [Programming,K-means,machine learning,interview,data science] # add tag
 ---
 Ce projet est a la base un test technique pour le poste stagiare data scientist.
-la 1 ere etape c'est de comprendre le jeu de donnée velib qui est du [opendata-paris](https://opendata.paris.fr/explore/dataset/velib-disponibilite-en-temps-reel/information/?disjunctive.name&disjunctive.is_installed&disjunctive.is_renting&disjunctive.is_returning&disjunctive.nom_arrondissement_communes)
-apres on a...
+**Theme:** Mobilité et Espace Public
+
+**Sujet:** disponibilité des velos en temps reel
+
+**Angle d'etude**: Comment on peut classer les quartiers selon l'activité du reseau Velib!!
 
 ## Plan
-1. Acquisition des données Vélib avec Python et Pandas
+1. Recuperation des données de l'API velib
 2. Stockage des données
 3. Acquisition des données
 4. Comprendre notre jeu de donnée
 5. Classification automatique non supervisée
 6. Data visualization
 
-# 1.Acquisition des données Vélib avec Python et Pandas
+la 1 ere etape c'est de comprendre le jeu de donnée velib qui est du [opendata-paris](https://opendata.paris.fr/explore/dataset/velib-disponibilite-en-temps-reel/information/?disjunctive.name&disjunctive.is_installed&disjunctive.is_renting&disjunctive.is_returning&disjunctive.nom_arrondissement_communes)
+mais avant on a besoin de recuperer les donnée avec python en utilisant API .
+
+
+# 1.Recuperation des données de l'API velib
 
 Plus concrètement, regardons en détail ce que contiennent ces données avec Python. Pour ce faire, nous allons utiliser le module requests pour lancer une requête sur l'API de Vélib. Notre première requête porte sur les caractéristiques des stations Vélibs
 ```
@@ -47,8 +54,8 @@ df_2.head()
 ```
 Pour chaque station, nous obtenons en temps réel (les données sont mises à jour toutes les minutes) le nombre de vélibs mis à disposition, le nombre de places disponibles et même la décomposition entre le nombre de vélos mécaniques et électriques.
   Congrats 🎉:Mission accomplie nous avons recuperer les donnée en utilisant API et python.
-  
-  # 2.Stockage des données
+ 
+# 2.Stockage des données
 
 Maintenant que nous savons récupérer les données Vélib, nous allons pouvoir les stocker sous la forme d'une base de données persistante SQLITE3. Pour faire simple, il s'agit d'une base de données dite légère (mais puissante !) qui se présente sous la forme d'un simple fichier. C'est un format très pratique pour de petits projets comme le notre ou pour la phase de développement de plus gros projets. Avec Pandas, la procédure est limpide :
 ```

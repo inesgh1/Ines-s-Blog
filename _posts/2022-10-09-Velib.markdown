@@ -179,13 +179,51 @@ L'inconvénient majeur de nos cartes est qu'il est difficile de distinguer et de
 districts = gpd.read_file("quartier_paris.geojson").to_crs(epsg=3857)
 districts
 ```
+Chaque quartier est donc défini comme un polygone, avec un certain périmètre et une surface. On peut directement tracer les quartiers de Paris sur la carte.
+```
+fig, ax = plt.subplots(figsize=(8, 6))
 
+districts.plot(ax=ax, alpha=0.5, edgecolor="white")
+ax.set_axis_off()
+ctx.add_basemap(ax)
 
+plt.show()
+```
+![success]({{site.baseurl}}/assets/img/quartier.png)
 
+On aimerait disposer du nombre de vélibs présent dans chacun de ces quartiers, et c'est là que se déploie toute la puissance de GeoPandas, voyez plutôt
+```
+districts["velib_number"] = districts.apply(
+    lambda district: (
+        some_data.within(district.geometry) * some_data["num_bikes_available"]
+    ).sum(),
+    axis=1
+)
+```
+Ce bloc mérite quelques explications. On crée une nouvelle colonne nommée velib_number, c'est à dire le nombre de vélibs présents dans le quartier. Pour ce faire, on somme tous les vélos qui sont inclus dans le quartier en question. Cette opération est rendue possible par la méthode .within() qui va déterminer si la station est bien localisée dans le polygone représentant le quartier.
 
+On peut faire la même opération pour calculer le nombre maximum de vélibs dans le quartier, et donc le pourcentage d'occupation des stations dans le quartier
+```
+districts["max_velib_number"] = districts.apply(
+        lambda district: (
+            some_data.within(district.geometry) * some_data["capacity"]
+        ).sum(),
+        axis=1,
+)
 
+districts["occupation"] = districts["velib_number"] / districts["max_velib_number"]
+```
+Enfin, on va tracer le taux d'occupation des stations Vélib, quartier par quartier
+```
+fig, ax = plt.subplots(figsize=(8, 6))
 
+districts.plot("occupation", cmap="OrRd", ax=ax, alpha=0.5, edgecolor="white")
+ax.set_axis_off()
+ctx.add_basemap(ax)
 
+plt.show()
+```
+![success]({{site.baseurl}}/assets/img/occupation.png)
 
 
 

@@ -69,7 +69,9 @@ plt.title('Histogram of Match Counts (Yes and No)')
 plt.xticks([0, 1], ['No', 'Yes'])
 plt.show()
 ```
-![Matchmaking Success Rate](agedistbygender.png)
+
+![I and My friends]({{site.baseurl}}/assets/img/agedistbygender.png)
+
 These initial statistics show that the majority of speed dating interactions did not lead to a match, while a smaller percentage of interactions did result in a successful match. This indicates that the success rate of finding a match was relatively low during the speed dating events(well 4 minutes seems not enough to like someone !!). so there is NO love at first sight!!!!😱
 ## Gender differences in finding their Matches
 Do women receive more positive final decisions from the other person (dec_o) than men do?
@@ -93,7 +95,9 @@ fig.update_layout(
 fig.show()
 
 ```
-![Matches by gender](decisionbygender.png)
+
+![I and My friends]({{site.baseurl}}/assets/img/decisionbygender.png)
+
 
 It looks like women received about **2189** **no** and about **1986** **yes** for the decision question "Would you like to see him or her again?". Men received about **2665** **no** and about **1529** **yes**. In other words, men are more likely to be rejected by women than women are to be rejected by men. This is a statistically significant difference as confirmed by the above chi-squared test p-value. **Poor guys**!🙈
  
@@ -119,6 +123,8 @@ plt.xlabel('Broken Heart', fontsize=16)
 ```
 
 ![I and My friends]({{site.baseurl}}/assets/img/brokenheart.png)
+
+
 ```python
 import statsmodels.api as sm
 # chi-square test
@@ -144,7 +150,9 @@ sns.heatmap(corr,
             yticklabels=corr.columns.values)
 plt.show()
 ```
+
 ![I and My friends]({{site.baseurl}}/assets/img/correlation.png)
+
 > Well, well, well! No matter how drop-dead gorgeous or incredibly charming you think you are, heartbreak might just be lurking around the corner, ready to pounce on anyone!
 
 Oh, and get this – your own super high opinion of your attractiveness (attr3_1) barely has anything to do with how attractive your date thinks you are (attr_o)! It's like they're living in completely different attractiveness dimensions!
@@ -188,50 +196,126 @@ fig_self.update_layout(
 # Show the plot
 fig_self.show()
 ```
+
 ![I and My friends]({{site.baseurl}}/assets/img/selfpercieved.png)
 
+It looks like being confident in your sense of humor and your intelligence can secure you a second date But: confident NOT arrogant !! Being HUmble is your way to your partner heart 🎯.
 ## Factors Influencing Second Date Decision: The Heart's Ultimate Goal
 
-Let's get to the nitty-gritty of factors impacting the second date decision – the heart's ultimate goal. Clubbing and movies take the crown, with impressive importances of 0.22 and 0.20, respectively. It seems like the life of the party can steal the show on speed dates!
+Let's get to the nitty-gritty of factors impacting the second date decision – the heart's ultimate goal. 
+The goal of this code is to leverage data science techniques, specifically logistic regression, to gain insights into the dynamics of speed dating and uncover factors that influence the likelihood of obtaining a second date. By analyzing the participants' attributes, interests, and self-perceptions, the model predicts the chances of a successful match. 
 
 ```python
-# Calculate the probability of getting a second date for each level of the self-attributes
-prob_by_self_attr = data.groupby(self_attributes)['dec_o'].mean().reset_index()
+# Import necessary libraries
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report
 
-# Create an interactive bar plot for self-attributes
-fig_self = px.bar(prob_by_self_attr, x=self_attributes, y='dec_o', text='dec_o', color='dec_o',
-                  color_continuous_scale='Blues', range_color=[0, 1])
+# Read the speed dating data from the CSV file
+data = pd.read_csv('../input/speed-dating-experiment/Speed Dating Data.csv', encoding="ISO-8859-1")
 
-# Update the layout for self-attributes plot
-fig_self.update_layout(title='Impact of Self-Perceived Attributes on Second Date Decision',
-                       xaxis_title='Self-Perceived Attributes',
-                       yaxis_title='Probability of Getting a Second Date',
-                       xaxis_tickangle=-45)
+# Select a subset of columns from the data for analysis
+selected_columns = [
+    'field_cd', 'race', 'goal', 'date', 'go_out', 'career_c',
+    'sports', 'tvsports', 'exercise', 'dining', 'museums',
+    'art', 'hiking', 'gaming', 'clubbing', 'reading', 'tv', 'theater', 'movies',
+    'concerts', 'music', 'shopping', 'yoga', 'exphappy', 'expnum', 'dec_o'
+]
+data = data[selected_columns]
 
-# Show the plots
-fig_self.show()
+# Drop rows with missing values
+data.dropna(inplace=True)
+
+# Define the independent variables (X) and the dependent variable (y)
+X = data.drop('dec_o', axis=1)  # Independent variables
+y = data['dec_o']  # Dependent variable (whether a second date was obtained)
+
+# Split the data into training and testing sets (75% training, 25% testing)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+
+# Create and fit the logistic regression model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the testing set
+y_pred = model.predict(X_test)
+
+# Calculate the accuracy of the model
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.2f}")
+
+# Print the classification report to see precision, recall, F1-score, etc.
+print(classification_report(y_test, y_pred))
+
+# Get the feature importances (coefficients) from the model
+feature_importances = model.coef_[0]
+
+# Create a dictionary to map the feature names to their importances
+feature_importance_dict = {}
+for feature, importance in zip(X.columns, feature_importances):
+    feature_importance_dict[feature] = importance
+
+# Sort the features based on their importances (descending order)
+sorted_feature_importances = dict(sorted(feature_importance_dict.items(), key=lambda item: item[1], reverse=True))
+
+# Print the features and their importances in descending order
+for feature, importance in sorted_feature_importances.items():
+    print(f"{feature}: {importance}")
+
 ```
-![I and My friends]({{site.baseurl}}/assets/img/correlation.png)
-## Embrace Your Quirks: Gaming and Passionate Pursuits
 
-* Gaming enthusiasts, don't lose hope.
-* It's not about the hobby; it's about finding someone who embraces your quirks and passions.
-![I and My friends]({{site.baseurl}}/assets/img/correlation.png)
-## Compatibility Unleashed: The Impact of Shared Interests
+![I and My friends]({{site.baseurl}}/assets/img/logisticregression.png)
 
-* Approximately 26% of participants unfortunately had their hearts broken.
-* Remember, love may not always be mutual, but it's the courage to try that counts!
+Alright, folks, gather 'round for the hilarious and eye-opening analysis of our dating factors! Drumroll, please!
+
+In the wacky world of dating, it seems like clubbing and movies are the dynamic duo that keeps the spark alive! With impressive importances of 0.22 and 0.20, respectively, these two factors scream, "We're the life of the party, and we'll keep you entertained all night long!"
+
+But hey, don't underestimate the power of museums and yoga, coming in strong with 0.20 and 0.09. Who knew that art and serenity could be such attractive qualities? It's like saying, "I appreciate culture, and I'm flexible in both mind and body!"
+
+Now, brace yourselves for the plot twist! The one thing that might raise a few eyebrows in the dating world is... drumroll intensifies... your taste in gaming! Hold up, gaming enthusiasts, don't despair! It seems like some potential partners might find your passion a bit dicey, but remember, there's someone out there for everyone!
+
+And for all the lovebirds out there, beware of the "reading" and "art" combo, clocking in with importances of -0.12 and -0.14. To our bookworms and art aficionados, fear not! It's not that your interests aren't intriguing; it's just that love might be more of an action-packed adventure for some!
+
+So there you have it, folks! In the unpredictable realm of dating, whether you're a club-hopper or an art connoisseur, there's someone out there who'll appreciate your unique charm and quirks. Remember, compatibility is the name of the game, and the right match will make your heart dance to the perfect melody! Happy dating! 💘
 
 ## Career Choices: The Path to the Heart
 
-* Outgoing souls, rejoice!
+## Outgoing souls, rejoice!
 * Your adventurous spirit can seal the deal for that second date.
-![I and My friends]({{site.baseurl}}/assets/img/correlation.png)
-## Self-Perceived Attributes: Embrace the Real You!
+```python
+# Mapping of go_out values to their corresponding names
+go_out_mapping = {
+    1: "Several times a week",
+    2: "Twice a week",
+    3: "Once a week",
+    4: "Twice a month",
+    5: "Once a month",
+    6: "Several times a year",
+    7: "Almost never"
+}
 
-* What you think of yourself and how others see you can be wonderfully unpredictable.
-* Love's charm transcends self-doubt, and finding someone who sees the real you is the ultimate win!
-![I and My friends]({{site.baseurl}}/assets/img/correlation.png)
+# Calculate the probability of getting a second date for each 'go_out' level
+prob_by_go_out = data.groupby('go_out')['dec_o'].mean().reset_index()
+prob_by_go_out['go_out'] = prob_by_go_out['go_out'].map(go_out_mapping)
+
+# Create an interactive bar plot using Plotly
+fig = px.bar(prob_by_go_out, x='go_out', y='dec_o', text='dec_o', color='dec_o',
+             color_continuous_scale='Blues', range_color=[0, 1])
+
+# Update the layout for better readability
+fig.update_layout(title='Impact of Going Out on Second Date Decision',
+                  xaxis_title='Frequency of Going Out',
+                  yaxis_title='Probability of Getting a Second Date',
+                  xaxis_tickangle=-45)
+
+# Show the plot
+fig.show()
+```
+
+![I and My friends]({{site.baseurl}}/assets/img/outgoing.png)
+
+So it seems like being an outgoing person could secure you a second date 🎊🥂
 ## The Power of Data Science in Love
 
 * A logistic regression model whispered the tales of impact.

@@ -16,7 +16,7 @@ The dataset speed dating data is quite substantial — over 8,000 observations w
 
 Let's begin with age, the timeless factor in the dating universe. After analyzing the data, it turns out that most of the participants in the speed dating experiment were in their mid-twenties to early thirties. Ah, the prime time for romantic adventures! So folks, if you're feeling that the clock is ticking, worry not! You're right on track with the dating universe's age standards.
 
-![Age Distribution](assets/img/image.png)
+![Age Distribution]({{site.baseurl}}assets/img/image.png)
 
 ## Gender Dynamics: A Dance of Romantic Timing
 

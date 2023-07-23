@@ -128,9 +128,67 @@ bh_rslt = bh_table.test_nominal_association()
 bh_rslt.pvalue
 >> 0.12624323316870334
 ```
+Looks like the difference in attractiveness was not statistically significant. So the good news is, the likelihood of getting rejected is not dependent on your attractiveness!☘️
+## Correlation between attributes 
+```python
+date5 = pd.concat([data['attr3_1'], data['sinc3_1'], data['intel3_1'], data['fun3_1'], data['attr_o'],
+                   data['sinc_o'], data['intel_o'], data['fun_o'], data['like'], data['like_o'], 
+                   data['int_corr'], data['url']], axis=1)
+
+plt.subplots(figsize=(15, 10))
+ax = plt.axes()
+ax.set_title("Correlation Heatmap")
+corr = date5.corr()
+sns.heatmap(corr, 
+            xticklabels=corr.columns.values,
+            yticklabels=corr.columns.values)
+plt.show()
+```
+![I and My friends]({{site.baseurl}}/assets/img/correlation.png)
+> Well, well, well! No matter how drop-dead gorgeous or incredibly charming you think you are, heartbreak might just be lurking around the corner, ready to pounce on anyone!
+
+Oh, and get this – your own super high opinion of your attractiveness (attr3_1) barely has anything to do with how attractive your date thinks you are (attr_o)! It's like they're living in completely different attractiveness dimensions!
+
+And guess what? Your intelligence and sincerity ratings don't seem to sync at all with your date's perspective! Looks like being brainy or genuine is harder to showcase in a speedy 4-minute date!
+
+**So, folks, remember, the heart is a wild and unpredictable creature, and perceptions can be tricky, even in the dating jungle! Keep your wits about you and embrace the surprises! 😄**
+
 ## The Impact of Self-Perception: A Wondrous Tale
 
 As the curtain lifts on the stage of self-perception, we find some intriguing revelations. The participants' own self-esteem and the way their dates perceived them often danced to different tunes. Who knew perceptions could be so versatile?
+But this is doesn't mean your selfesteem won't help you secure your second date , look at this folks :
+```python
+# Attributes related to self-perception
+self_attributes = ['attr3_1', 'sinc3_1', 'intel3_1', 'fun3_1', 'amb3_1']
+
+# Calculate the probability of getting a second date for each level of the self-attributes
+prob_by_self_attr = data.groupby(self_attributes)['dec_o'].mean().reset_index()
+
+# Create a bar plot for self-attributes
+fig_self = go.Figure()
+
+for attribute in self_attributes:
+    fig_self.add_trace(go.Bar(
+        x=prob_by_self_attr[attribute],
+        y=prob_by_self_attr['dec_o'],
+        name=attribute,
+        text=prob_by_self_attr['dec_o'].round(2),
+        textposition='auto',
+    ))
+
+# Update the layout for self-attributes plot
+fig_self.update_layout(
+    title='Impact of Self-Perceived Attributes on Second Date Decision',
+    xaxis_title='Self-Perceived Attributes',
+    yaxis_title='Probability of Getting a Second Date',
+    xaxis_tickangle=-45,
+    barmode='group',
+)
+
+# Show the plot
+fig_self.show()
+```
+![I and My friends]({{site.baseurl}}/assets/img/selfpercieved.png)
 
 ## Factors Influencing Second Date Decision: The Heart's Ultimate Goal
 
@@ -153,12 +211,12 @@ fig_self.update_layout(title='Impact of Self-Perceived Attributes on Second Date
 # Show the plots
 fig_self.show()
 ```
-
+![I and My friends]({{site.baseurl}}/assets/img/correlation.png)
 ## Embrace Your Quirks: Gaming and Passionate Pursuits
 
 * Gaming enthusiasts, don't lose hope.
 * It's not about the hobby; it's about finding someone who embraces your quirks and passions.
-
+![I and My friends]({{site.baseurl}}/assets/img/correlation.png)
 ## Compatibility Unleashed: The Impact of Shared Interests
 
 * Approximately 26% of participants unfortunately had their hearts broken.
@@ -168,18 +226,18 @@ fig_self.show()
 
 * Outgoing souls, rejoice!
 * Your adventurous spirit can seal the deal for that second date.
-
+![I and My friends]({{site.baseurl}}/assets/img/correlation.png)
 ## Self-Perceived Attributes: Embrace the Real You!
 
 * What you think of yourself and how others see you can be wonderfully unpredictable.
 * Love's charm transcends self-doubt, and finding someone who sees the real you is the ultimate win!
-
+![I and My friends]({{site.baseurl}}/assets/img/correlation.png)
 ## The Power of Data Science in Love
 
 * A logistic regression model whispered the tales of impact.
 * The statistics confirmed that clubbing, movies, museums, and yoga held sway over the dating dance floor.
 * The journey of self-discovery, career choices, and shared interests can make love's melody sweeter.
-
+![I and My friends]({{site.baseurl}}/assets/img/correlation.png)
 ## Conclusion
 
 * The journey of finding love is a wild ride, filled with laughter, heartbreak, and unexpected twists.

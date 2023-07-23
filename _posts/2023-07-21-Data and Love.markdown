@@ -280,7 +280,50 @@ And for all the lovebirds out there, beware of the "reading" and "art" combo, cl
 So there you have it, folks! In the unpredictable realm of dating, whether you're a club-hopper or an art connoisseur, there's someone out there who'll appreciate your unique charm and quirks. Remember, compatibility is the name of the game, and the right match will make your heart dance to the perfect melody! Happy dating! 💘
 
 ## Career Choices: The Path to the Heart
+```python
+# Mapping of career_c values to their corresponding names
+career_c_mapping = {
+    1: "Lawyer",
+    2: "Academic/Research",
+    3: "Psychologist",
+    4: "Doctor/Medicine",
+    5: "Engineer",
+    6: "Creative Arts/Entertainment",
+    7: "Banking/Consulting/Finance/Marketing/Business/CEO/Entrepreneur/Admin",
+    8: "Real Estate",
+    9: "International/Humanitarian Affairs",
+    10: "Undecided",
+    11: "Social Work",
+    12: "Speech Pathology",
+    13: "Politics",
+    14: "Pro sports/Athletics",
+    15: "Other",
+    16: "Journalism",
+    17: "Architecture"
+}
 
+# Calculate the probability of getting a second date for each 'career_c' level
+prob_by_career_c = data.groupby('career_c')['dec_o'].mean().reset_index()
+prob_by_career_c['career_c'] = prob_by_career_c['career_c'].map(career_c_mapping)
+
+# Create an interactive bar plot using Plotly
+fig = px.bar(prob_by_career_c, x='career_c', y='dec_o', text='dec_o', color='dec_o',
+             color_continuous_scale='Blues', range_color=[0, 1])
+
+# Update the layout for better readability
+fig.update_layout(title='Impact of Career Choice on Second Date Decision',
+                  xaxis_title='Career Choice',
+                  yaxis_title='Probability of Getting a Second Date',
+                  xaxis_tickangle=-45)
+
+# Show the plot
+fig.show()
+```
+
+![I and My friends]({{site.baseurl}}/assets/img/careerchoice.png)
+
+I thought engineering is a sexy job😂!!
+Well, I know who can say no to a doctor!!!😂🎯
 ## Outgoing souls, rejoice!
 * Your adventurous spirit can seal the deal for that second date.
 ```python
@@ -321,7 +364,7 @@ So it seems like being an outgoing person could secure you a second date 🎊�
 * A logistic regression model whispered the tales of impact.
 * The statistics confirmed that clubbing, movies, museums, and yoga held sway over the dating dance floor.
 * The journey of self-discovery, career choices, and shared interests can make love's melody sweeter.
-![I and My friends]({{site.baseurl}}/assets/img/correlation.png)
+* Moreover, leveraging powerful techniques like k-means clustering can unveil intriguing trends in the early stages of attraction, offering valuable insights into the dynamics of connections formed within the first four minutes. Data science opens new avenues of understanding and enriches the quest for love.
 ## Conclusion
 
 * The journey of finding love is a wild ride, filled with laughter, heartbreak, and unexpected twists.

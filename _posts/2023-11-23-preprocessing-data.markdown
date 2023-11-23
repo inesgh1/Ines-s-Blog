@@ -11,3 +11,5 @@ Welcome to the Data Preprocessing Mastery Workshop!
 Greetings Data Enthusiasts,
 
 In the vast landscape of data science, the journey from raw data to meaningful insights begins with a crucial step: Data Preprocessing. Today, we embark on a journey to unravel the intricacies of this fundamental process that lays the foundation for robust analyses and powerful machine learning models.
+
+![I and My friends]({{site.baseurl}}/assets/img/realityvsexcpec.png)

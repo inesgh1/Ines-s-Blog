@@ -101,8 +101,6 @@ When working with numerical data, it's often essential to scale or normalize the
 
  **Min-Max Scaling:**
    - **Objective:** Transform the data to a specific range (usually [0, 1]) to ensure all features have the same scale.
-   - **Formula:** 
-     \[ X_{\text{scaled}} = \frac{X - \text{min}(X)}{\text{max}(X) - \text{min}(X)} \]
    - **Explanation:** It linearly scales the data, mapping the minimum value to 0 and the maximum value to 1. Useful when features have different ranges and you want to bring them to a common scale.
 
     ```python
@@ -114,8 +112,6 @@ When working with numerical data, it's often essential to scale or normalize the
 
  **Standardization:**
    - **Objective:** Standardize the data to have a mean of 0 and a standard deviation of 1.
-   - **Formula:** 
-     \[ X_{\text{standardized}} = \frac{X - \text{mean}(X)}{\text{std}(X)} \]
    - **Explanation:** It transforms the data to have a standard normal distribution. Useful when the features have different units and you want them to be comparable.
 
     ```python
@@ -127,8 +123,6 @@ When working with numerical data, it's often essential to scale or normalize the
 
  **Robust Scaling:**
    - **Objective:** Scale the data while handling outliers robustly.
-   - **Formula:** 
-     \[ X_{\text{robust-scaled}} = \frac{X - \text{median}(X)}{\text{IQR}(X)} \]
    - **Explanation:** It uses the median and the interquartile range (IQR) to scale the data. It's less sensitive to outliers compared to min-max scaling and standardization.
 
     ```python

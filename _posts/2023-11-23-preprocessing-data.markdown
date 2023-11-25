@@ -93,3 +93,40 @@ Data preprocessing is the process of transforming raw data into an understandabl
 ### 1.Numerical Data :
 Numerical data is data that can be measured or counted, such as age, height, weight, income, or temperature. This type of data can be further divided into continuous or discrete, depending on whether it has a finite or infinite range of values. 
 Preprocessing numerical data may involve scaling or normalizing the data to reduce the effect of outliers and different units of measurement. This can be done using min-max scaling, standardization, or robust scaling. Additionally, missing values can be handled by imputing them with a mean, median, mode, or a custom value. Alternatively, you can drop the rows or columns with missing values; however, this could result in losing valuable information. Lastly, dimensionality reduction techniques such as principal component analysis (PCA) or linear discriminant analysis (LDA) can be applied to select the most relevant features and improve the performance and interpretability of the models.
+### 2.categorical data :
+ **Encoding Categorical Data**
+
+Encoding categorical data is the process of converting categorical variables into a numerical format so that they can be used as inputs for machine learning models. Categorical variables are those that can take on a limited, and usually fixed, number of possible values or categories.
+
+#### Common Encoding Methods
+
+#### Label Encoding
+
+- Assigns a unique integer to each category. Suitable for ordinal data where the order matters.
+- Example: `['Red', 'Green', 'Blue']` might be encoded as `[0, 1, 2]`.
+
+  ```python
+  from sklearn.preprocessing import LabelEncoder
+
+  label_encoder = LabelEncoder()
+  encoded_labels = label_encoder.fit_transform(['Red', 'Green', 'Blue'])
+  ```
+One-Hot Encoding
+Creates binary columns for each category and indicates the presence of the category with a 1 or 0.
+
+Suitable for nominal data where there is no inherent order among categories.
+
+Example: ['Red', 'Green', 'Blue'] might be encoded as three columns: Red (1 or 0), Green (1 or 0), Blue (1 or 0).
+
+```python
+
+from sklearn.preprocessing import OneHotEncoder
+import pandas as pd
+
+# Create a DataFrame with categorical data
+data = pd.DataFrame({'Color': ['Red', 'Green', 'Blue']})
+
+# Apply one-hot encoding
+one_hot_encoder = OneHotEncoder()
+encoded_data = one_hot_encoder.fit_transform(data[['Color']]).toarray()
+```

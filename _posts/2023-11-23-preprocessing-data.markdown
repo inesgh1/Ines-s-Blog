@@ -32,14 +32,9 @@ Data preprocessing is the process of transforming raw data into an understandabl
 
 ![I and My friends]({{site.baseurl}}/assets/img/tasksdata.png)
 ### 1.Data Cleaning :
- - Handling Missing values
- - Handling Noisy Data
-     - Binning
-     - Regression
-     - Clustering
-- Handling Missing Values: Addressing the gaps in your dataset through techniques like imputation based on mean, median, or advanced machine learning models.
-- Outlier Management: Identifying and managing outliers that might skew analysis and distort patterns.
-- Inconsistency Resolution: Tackling inconsistencies in data entry, ensuring uniformity and reliability.
+ - **Handling Missing values** :Addressing the gaps in your dataset through techniques like imputation based on mean, median, or advanced machine learning models.
+- **Outlier Management** : Identifying and managing outliers that might skew analysis and distort patterns.
+- **Inconsistency Resolution** : Tackling inconsistencies in data entry, ensuring uniformity and reliability.
   ### 2.Data Integration :
 Combining data from multiple sources is common in many analyses. Data wrangling includes integrating diverse datasets into a unified format, ensuring that they can be effectively analyzed together.
 ### 3.Data Reduction :

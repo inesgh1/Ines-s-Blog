@@ -102,7 +102,7 @@ Encoding categorical data is the process of converting categorical variables int
 
 #### Label Encoding
 
-- Assigns a unique integer to each category. Suitable for ordinal data where the order matters.
+- Assigns a unique integer to each category. ***Suitable for ordinal data where the order matters.***
 - Example: `['Red', 'Green', 'Blue']` might be encoded as `[0, 1, 2]`.
 
   ```python
@@ -111,10 +111,10 @@ Encoding categorical data is the process of converting categorical variables int
   label_encoder = LabelEncoder()
   encoded_labels = label_encoder.fit_transform(['Red', 'Green', 'Blue'])
   ```
-One-Hot Encoding
+####  One-Hot Encoding
 Creates binary columns for each category and indicates the presence of the category with a 1 or 0.
 
-Suitable for nominal data where there is no inherent order among categories.
+***Suitable for nominal data where there is no inherent order among categories.***
 
 Example: ['Red', 'Green', 'Blue'] might be encoded as three columns: Red (1 or 0), Green (1 or 0), Blue (1 or 0).
 

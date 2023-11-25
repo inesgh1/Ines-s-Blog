@@ -104,18 +104,14 @@ Encoding categorical data is the process of converting categorical variables int
 
 - Assigns a unique integer to each category. ***Suitable for ordinal data where the order matters.***
 - Example: `['Red', 'Green', 'Blue']` might be encoded as `[0, 1, 2]`.
-
-  ```python
+ ```python
   from sklearn.preprocessing import LabelEncoder
 
   label_encoder = LabelEncoder()
   encoded_labels = label_encoder.fit_transform(['Red', 'Green', 'Blue'])
-  ```
-####  One-Hot Encoding
-Creates binary columns for each category and indicates the presence of the category with a 1 or 0.
-
-***Suitable for nominal data where there is no inherent order among categories.***
-
+ ```
+#### One-Hot Encoding
+Creates binary columns for each category and indicates the presence of the category with a 1 or 0.***Suitable for nominal data where there is no inherent order among categories.***
 Example: ['Red', 'Green', 'Blue'] might be encoded as three columns: Red (1 or 0), Green (1 or 0), Blue (1 or 0).
 
 ```python
@@ -130,3 +126,48 @@ data = pd.DataFrame({'Color': ['Red', 'Green', 'Blue']})
 one_hot_encoder = OneHotEncoder()
 encoded_data = one_hot_encoder.fit_transform(data[['Color']]).toarray()
 ```
+
+### 3.Textual Data
+Textual data, such as reviews, tweets, emails, or articles, is data that consists of words, sentences, or documents and is typically unstructured and complex. Consequently, it requires more preprocessing steps than other data types.
+**Common preprocessing steps**:
+- ***cleaning the data*** by removing punctuation, stopwords, numbers, HTML tags, or other irrelevant characters to reduce the noise and improve the readability of the text.
+```python
+import re
+from nltk.corpus import stopwords
+def clean_text(text):
+    # Remove punctuation and numbers
+    text = re.sub(r'[^\w\s]', '', text)
+    # Remove stopwords
+    stop_words = set(stopwords.words('english'))
+    text = ' '.join(word for word in text.split() if word.lower() not in stop_words)
+    return text
+```
+- ***Tokenizing the data*** into smaller units such as words, characters, or n-grams can help capture the meaning and structure of the text.
+```
+  from nltk.tokenize import word_tokenize
+
+def tokenize_text(text):
+    # Tokenize the text into words
+    tokens = word_tokenize(text)
+    return tokens
+```
+- ***Vectorizing the data*** by converting it into numerical values that represent the frequency, importance, or similarity of the tokens can be done using methods such as count vectorizer, term frequency-inverse document frequency (TF-IDF), or word embeddings.
+```python
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from gensim.models import Word2Vec
+
+# Example text data
+text_data = ["This is an example sentence.", "Another example for preprocessing."]
+
+# Count Vectorizer
+count_vectorizer = CountVectorizer()
+count_matrix = count_vectorizer.fit_transform(text_data)
+
+# TF-IDF Vectorizer
+tfidf_vectorizer = TfidfVectorizer()
+tfidf_matrix = tfidf_vectorizer.fit_transform(text_data)
+
+# Word Embeddings (Word2Vec)
+word2vec_model = Word2Vec(sentences=[word_tokenize(sentence) for sentence in text_data], vector_size=100, window=5, min_count=1, workers=4)
+word_embeddings = [word2vec_model.wv[word] for sentence in text_data for word in word_tokenize(sentence)]
+ ```

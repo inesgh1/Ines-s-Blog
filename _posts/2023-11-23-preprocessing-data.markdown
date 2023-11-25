@@ -94,7 +94,55 @@ Data preprocessing is the process of transforming raw data into an understandabl
 Numerical data is data that can be measured or counted, such as age, height, weight, income, or temperature. This type of data can be further divided into continuous or discrete, depending on whether it has a finite or infinite range of values. 
 
 **Preprocessing numerical data techniques** 
-- **scaling or normalizing** the data to reduce the effect of outliers and different units of measurement. This can be done using min-max scaling, standardization, or robust scaling. Additionally,
+- **scaling or normalizing** the data to reduce the effect of outliers and different units of measurement. This can be done using min-max scaling, standardization, or robust scaling.
+### Scaling or Normalizing Numerical Data
+
+When working with numerical data, it's often essential to scale or normalize the data to mitigate the impact of outliers and accommodate different units of measurement. Common techniques for this purpose include:
+
+ **Min-Max Scaling:**
+   - **Objective:** Transform the data to a specific range (usually [0, 1]) to ensure all features have the same scale.
+   - **Formula:** 
+     \[ X_{\text{scaled}} = \frac{X - \text{min}(X)}{\text{max}(X) - \text{min}(X)} \]
+   - **Explanation:** It linearly scales the data, mapping the minimum value to 0 and the maximum value to 1. Useful when features have different ranges and you want to bring them to a common scale.
+
+    ```python
+    from sklearn.preprocessing import MinMaxScaler
+
+    min_max_scaler = MinMaxScaler()
+    scaled_data = min_max_scaler.fit_transform(numerical_data)
+    ```
+
+ **Standardization:**
+   - **Objective:** Standardize the data to have a mean of 0 and a standard deviation of 1.
+   - **Formula:** 
+     \[ X_{\text{standardized}} = \frac{X - \text{mean}(X)}{\text{std}(X)} \]
+   - **Explanation:** It transforms the data to have a standard normal distribution. Useful when the features have different units and you want them to be comparable.
+
+    ```python
+    from sklearn.preprocessing import StandardScaler
+
+    standard_scaler = StandardScaler()
+    standardized_data = standard_scaler.fit_transform(numerical_data)
+    ```
+
+ **Robust Scaling:**
+   - **Objective:** Scale the data while handling outliers robustly.
+   - **Formula:** 
+     \[ X_{\text{robust-scaled}} = \frac{X - \text{median}(X)}{\text{IQR}(X)} \]
+   - **Explanation:** It uses the median and the interquartile range (IQR) to scale the data. It's less sensitive to outliers compared to min-max scaling and standardization.
+
+    ```python
+    from sklearn.preprocessing import RobustScaler
+
+    robust_scaler = RobustScaler()
+    robust_scaled_data = robust_scaler.fit_transform(numerical_data)
+    ```
+
+**Considerations:**
+- Use Min-Max Scaling when you need data in a specific range.
+- Use Standardization when you want features to have a mean of 0 and a standard deviation of 1.
+- Use Robust Scaling when dealing with datasets containing outliers, as it is less influenced by extreme values.
+
 - **Handling missing values** can be handled by imputing them with a mean, median, mode, or a custom value. 
 - **Dimensionality reduction techniques** such as principal component analysis (PCA) or linear discriminant analysis (LDA) can be applied to select the most relevant features and improve the performance and interpretability of the models.
 ### 2.categorical data :

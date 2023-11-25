@@ -31,15 +31,63 @@ Data preprocessing is the process of transforming raw data into an understandabl
 ## Major Tasks in Data Preprocessing :
 
 ![I and My friends]({{site.baseurl}}/assets/img/tasksdata.png)
-### 1.Data Cleaning :
- - **Handling Missing values** :Addressing the gaps in your dataset through techniques like imputation based on mean, median, or advanced machine learning models.
-- **Outlier Management** : Identifying and managing outliers that might skew analysis and distort patterns.
-- **Inconsistency Resolution** : Tackling inconsistencies in data entry, ensuring uniformity and reliability.
-### 2.Data Integration :
-Combining data from multiple sources is common in many analyses. Data wrangling includes integrating diverse datasets into a unified format, ensuring that they can be effectively analyzed together.
-### 3.Data Reduction :
-### 4.Data Transformation :
-This involves scaling, normalizing, or transforming variables to meet the assumptions of statistical models or to improve the interpretability of the results.
+### **1. Data Cleaning:**
+   - **Handling Missing Values:**
+      - Imputation: Replace missing values with a calculated or estimated value (mean, median, mode).
+      - Removal: Exclude rows or columns with missing values.
+      - Advanced Imputation: Use machine learning algorithms for more accurate imputation.
+
+   - **Outlier Management:**
+      - Identification: Detect and flag outliers using statistical methods.
+      - Treatment: Transform or remove outliers based on the impact on analysis.
+
+   - **Inconsistency Resolution:**
+      - Standardization: Ensure uniformity in data by converting to a consistent format.
+      - Cleaning: Correct errors in data entry, spelling, or formatting.
+
+### **2. Data Integration:**
+   - **Combining Datasets:**
+      - Concatenation: Stack datasets vertically or horizontally.
+      - Merging: Combine datasets based on common keys or columns.
+
+   - **Handling Redundancies:**
+      - Deduplication: Remove duplicate records.
+      - Aggregation: Consolidate data by grouping and summarizing.
+
+   - **Handling Inconsistencies:**
+      - Standardization: Normalize data to a common scale.
+      - Transformation: Convert data to a consistent format.
+
+### **3. Data Reduction:**
+   - **Dimensionality Reduction:**
+      - Principal Component Analysis (PCA): Reduce dimensionality while retaining important features.
+      - Feature Selection: Choose the most relevant features based on importance scores.
+
+   - **Sampling Techniques:**
+      - Oversampling: Increase instances of the minority class.
+      - Undersampling: Decrease instances of the majority class.
+
+   - **Binning and Discretization:**
+      - Group numerical data into bins or categories.
+      - Simplify data for easier analysis.
+
+### **4. Data Transformation:**
+   - **Handling Numerical Data:**
+      - Scaling: Normalize or standardize numerical features.
+      - Log Transformation: Address skewness in data.
+
+   - **Wrangling Categorical Data:**
+      - Encoding: Convert categorical variables into numerical representations (one-hot encoding, label encoding).
+      - Rare Category Management: Handle infrequent categories to prevent sparsity.
+
+   - **Text Data Transformation:**
+      - Tokenization: Break down text into tokens.
+      - Text Cleaning: Remove stop words, punctuation, and apply stemming or lemmatization.
+
+   - **Temporal Data Transformation:**
+      - Feature Extraction: Extract relevant features from date and time data.
+      - Time Zone Standardization: Ensure uniformity in time zone representation.
+
   
 ## What is the best way to preprocess data with different types?
 ### 1.Numerical Data :

@@ -3,7 +3,7 @@ layout: post
 title: What you should know to master data preprocessing !
 date: 2023-11-23
 description: This is a workshop presented with the google developer student club FSS  # Add image post (optional)
-img: workshop.png
+img: workshop.jpg
 tags: [Programming,K-means,EDA] # add tag
 ---
 

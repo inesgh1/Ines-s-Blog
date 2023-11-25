@@ -146,7 +146,7 @@ def clean_text(text):
     return text
 ```
 - ***Tokenizing the data*** into smaller units such as words, characters, or n-grams can help capture the meaning and structure of the text.
-```
+```python
   from nltk.tokenize import word_tokenize
 
 def tokenize_text(text):

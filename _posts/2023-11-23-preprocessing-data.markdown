@@ -30,7 +30,8 @@ Data preprocessing is the process of transforming raw data into an understandabl
 ## What is the best way to preprocess data with different types?
 ## Major Tasks in Data Preprocessing :
 
-![I and My friends]({{site.baseurl}}/assets/img/Major Tasks in Data Preprocessing.png)
+![I and My friends]({{site.baseurl}}/assets/img/tasksdata.png)
+
 ### 1.Numerical Data :
 Numerical data is data that can be measured or counted, such as age, height, weight, income, or temperature. This type of data can be further divided into continuous or discrete, depending on whether it has a finite or infinite range of values. 
 Preprocessing numerical data may involve scaling or normalizing the data to reduce the effect of outliers and different units of measurement. This can be done using min-max scaling, standardization, or robust scaling. Additionally, missing values can be handled by imputing them with a mean, median, mode, or a custom value. Alternatively, you can drop the rows or columns with missing values; however, this could result in losing valuable information. Lastly, dimensionality reduction techniques such as principal component analysis (PCA) or linear discriminant analysis (LDA) can be applied to select the most relevant features and improve the performance and interpretability of the models.

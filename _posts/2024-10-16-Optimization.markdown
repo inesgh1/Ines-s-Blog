@@ -1,10 +1,10 @@
 ---
 layout: post
-title: Optimizing SQL Queries in BigQuery
-date: 2024-10-16
-description: Optimizing SQL Queries in BigQuery: A Deep Dive into Partitioned Tables, CTEs, and Views
-img: Heading.png # Add image post (optional)
-tags: [Programming,K-means,EDA,speed dating ,data science] # add tag
+title: Build a Paraphrasing web application using flask and Pegasus model
+date: 2022-09-21 
+description: You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. # Add post description (optional)
+img: how-to-start.jpg # Add image post (optional)
+tags: [Programming, Learn,flask,transformers] # add tag
 ---
 # Optimizing SQL Queries in BigQuery: A Deep Dive into Partitioned Tables, CTEs, and Views
 

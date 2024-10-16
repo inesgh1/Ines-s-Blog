@@ -1,10 +1,10 @@
 ---
 layout: post
-title: What you should know to master data preprocessing !
-date: 2024-10-16
-description: Mastering Data Pipelines: A Step-by-Step Guide Using BigQuery, Dataflow, and Airflow # Add image post (optional)
-img: workshop.jpg
-tags: [Programming,ETL,BigQuery,data engineering , dataflow ,airflow] # add tag
+title: A Data Scientist's Journey into the Realm of Love!💘
+date: 2023-07-21
+description: This is a project that explore the speed dating data 
+img: lovedata.jpeg # Add image post (optional)
+tags: [Programming,K-means,EDA,speed dating ,data science] # add tag
 ---
 
 

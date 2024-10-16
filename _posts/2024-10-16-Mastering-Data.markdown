@@ -1,9 +1,9 @@
 ---
 layout: post
-title: A Data Scientist's Journey into the Realm of Love!💘
-date: 2023-07-21
-description: This is a project that explore the speed dating data 
-img: lovedata.jpeg # Add image post (optional)
+title: Mastering Data Pipelines
+date: 2024-10-16
+description: This is a A Step-by-Step Guide Using BigQuery, Dataflow, and Airflow 
+img: Heading.png # Add image post (optional)
 tags: [Programming,K-means,EDA,speed dating ,data science] # add tag
 ---
 

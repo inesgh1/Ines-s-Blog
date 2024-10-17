@@ -110,4 +110,4 @@ In this example, partitioning reduces the data scanned, the CTE organizes the lo
 
 By leveraging **partitioned tables**, **CTEs**, and **views**, you can optimize both the performance and maintainability of your SQL queries in BigQuery. These techniques not only improve query execution times but also provide cost savings and enhanced data security. Apply these best practices to ensure your BigQuery queries are both efficient and scalable.
 
-![SQL Optimization](https://example.com/sql-optimization.png)
+![SQL Optimization]({{site.baseurl}}/assets/img/overallopt.png)

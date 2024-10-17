@@ -43,7 +43,7 @@ SELECT * FROM `your_project.dataset.source_table`;
 ### What is a CTE?
 
 A Common Table Expression (CTE) is a temporary result set that can be referenced within a `SELECT`, `INSERT`, `UPDATE`, or `DELETE` statement. CTEs help break down complex queries and improve readability.
-
+![I and My friends]({{site.baseurl}}/assets/img/cte.png)
 ### When to Use CTEs
 
 - **Breaking Down Complex Queries**: Use CTEs to split complex queries into smaller, readable chunks.

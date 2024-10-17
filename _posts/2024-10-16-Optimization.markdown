@@ -37,7 +37,7 @@ SELECT * FROM `your_project.dataset.source_table`;
 
 - **Cost Savings**: BigQuery charges based on the amount of data scanned. Partitioning reduces the scan size, lowering costs.
 - **Improved Query Performance**: Queries that filter based on partitioned columns will only scan relevant partitions, resulting in faster query execution.
-
+![I and My friends]({{site.baseurl}}/assets/img/partition.png)
 ## 2. Common Table Expressions (CTEs)
 
 ### What is a CTE?

@@ -1,10 +1,10 @@
 ---
 layout: post
-title: Data Wrangling for Machine Learning – Preparing Data for AI Success
-date: 2024-11-01 
-description: This workshop presented as part of contribution to Wiempower Event
-img: Heading.png # Add image post (optional)
-tags: [Programming, Learn,flask,transformers] # add tag
+title: Optimizing SQL Queries in BigQuery
+date: 2024-10-15
+description: This is a A Step-by-Step Guide to Optimizing SQL Queries
+img: Optimizing.png # Add image post (optional)
+tags: [Programming,Etl,SQL,BigQuery,data engineering] # add tag
 ---
 
 # Workshop: Data Wrangling for Machine Learning – Preparing Data for AI Success

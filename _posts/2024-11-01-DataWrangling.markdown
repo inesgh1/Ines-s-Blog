@@ -1,10 +1,10 @@
 ---
 layout: post
-title: Optimizing SQL Queries in BigQuery
-date: 2024-10-15
-description: This is a A Step-by-Step Guide to Optimizing SQL Queries
-img: Optimizing.png # Add image post (optional)
-tags: [Programming,Etl,SQL,BigQuery,data engineering] # add tag
+title: Data Wrangling for Machine Learning – Preparing Data for AI Success
+date: 2024-11-01 
+description: This workshop presented as part of contribution to Wiempower Event
+img: Heading.png # Add image post (optional)
+tags: [Programming, Learn,flask,transformers] # add tag
 ---
 
 # Workshop: Data Wrangling for Machine Learning – Preparing Data for AI Success
@@ -14,7 +14,7 @@ tags: [Programming,Etl,SQL,BigQuery,data engineering] # add tag
 ## Opening (5 mins)
 
 ### Introduction
-Welcome, everyone, to today’s workshop on data wrangling for machine learning! My name is **[Your Name]**, and I work as a data engineer with a focus on transforming raw data into insights. Today, we’ll learn how to prepare data for AI applications, focusing on key wrangling techniques that can make or break a machine learning model.
+Welcome, everyone, to today’s workshop on data wrangling for machine learning! My name is **Ines**, and I work as a data engineer with a focus on transforming raw data into insights. Today, we’ll learn how to prepare data for AI applications, focusing on key wrangling techniques that can make or break a machine learning model.
 
 ### Workshop Objectives
 Our goal is to understand the steps involved in preparing data for machine learning. We’ll cover cleaning, transforming, and engineering data using the Iris dataset. By the end, you’ll have a solid foundation in data wrangling, and we’ll even try a basic machine learning model to see how this data preparation impacts performance!

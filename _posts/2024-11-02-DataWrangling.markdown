@@ -1,9 +1,8 @@
 ---
 layout: post
-title: Build a Paraphrasing web application using flask and Pegasus model
-date: 2022-09-21 
-description: You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. # Add post description (optional)
-img: how-to-start.jpg # Add image post (optional)
+title: Data Wrangling for Machine Learning – Preparing Data for AI Success
+date: 2024-11-02 
+description: This workshop presented as part of contribution to Wiempower Event
 tags: [Programming, Learn,flask,transformers] # add tag
 ---
 # Workshop: Data Wrangling for Machine Learning – Preparing Data for AI Success
@@ -13,7 +12,7 @@ tags: [Programming, Learn,flask,transformers] # add tag
 ## Opening (5 mins)
 
 ### Introduction
-Welcome, everyone, to today’s workshop on data wrangling for machine learning! My name is **[Your Name]**, and I work as a data engineer with a focus on transforming raw data into insights. Today, we’ll learn how to prepare data for AI applications, focusing on key wrangling techniques that can make or break a machine learning model.
+Welcome, everyone, to today’s workshop on data wrangling for machine learning! My name is **Ines**, and I work as a data engineer with a focus on transforming raw data into insights. Today, we’ll learn how to prepare data for AI applications, focusing on key wrangling techniques that can make or break a machine learning model.
 
 ### Workshop Objectives
 Our goal is to understand the steps involved in preparing data for machine learning. We’ll cover cleaning, transforming, and engineering data using the Iris dataset. By the end, you’ll have a solid foundation in data wrangling, and we’ll even try a basic machine learning model to see how this data preparation impacts performance!

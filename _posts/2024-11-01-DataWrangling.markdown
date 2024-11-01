@@ -11,7 +11,7 @@ tags: [Programming, Learn,flask,transformers] # add tag
 
 ---
 
-## Opening (5 mins)
+## Opening 
 
 ### Introduction
 Welcome, everyone, to today’s workshop on data wrangling for machine learning! My name is **Ines**, and I work as a data engineer with a focus on transforming raw data into insights. Today, we’ll learn how to prepare data for AI applications, focusing on key wrangling techniques that can make or break a machine learning model.
@@ -21,7 +21,7 @@ Our goal is to understand the steps involved in preparing data for machine learn
 
 ---
 
-## 1. Why Data Wrangling? (10 mins)
+## 1. Why Data Wrangling? 
 
 ### Discussion
 Let’s start with a question: **why do you think data preparation is crucial for machine learning?** What kinds of problems do we need to fix in data?
@@ -33,7 +33,7 @@ For instance, think of how GPS systems rely on real-time, accurate data to provi
 
 ---
 
-## 2. Tools for Data Wrangling (10 mins)
+## 2. Tools for Data Wrangling 
 
 ### Explanation
 For this workshop, we’ll use Python’s `pandas` and `scikit-learn` libraries. `pandas` is popular for data manipulation, while `scikit-learn` provides a range of tools for preparing data and building models.
@@ -61,7 +61,7 @@ The dataset includes measurements like sepal length, sepal width, petal length, 
 
 ---
 
-## 3. Data Cleaning (15 mins)
+## 3. Data Cleaning 
 
 **Objective**: Handle missing values, duplicates, and data type issues.
 
@@ -95,7 +95,7 @@ In other cases, correcting data types may be necessary.
 
 ---
 
-## 4. Data Transformation (20 mins)
+## 4. Data Transformation 
 
 **Objective**: Scale numerical data and encode categorical data.
 
@@ -119,7 +119,7 @@ data['species'] = label_encoder.fit_transform(data['species'])
 
 ---
 
-## 5. Feature Engineering (20 mins)
+## 5. Feature Engineering 
 
 **Objective**: Create new features to reveal hidden patterns.
 
@@ -139,7 +139,7 @@ data['petal_ratio'] = data['petal length (cm)'] / data['petal width (cm)']
 
 ---
 
-## 6. Preparing for Machine Learning (20 mins)
+## 6. Preparing for Machine Learning 
 
 **Objective**: Finalize the dataset and run a simple model.
 
@@ -172,7 +172,7 @@ With this accuracy score, we can see how well the model performed.
 
 ---
 
-## 7. Q&A and Wrap-Up (10 mins)
+## 7. Q&A and Wrap-Up 
 
 ### Summary
 We’ve gone through each stage of data wrangling, from cleaning to feature engineering, and even applied a basic model to see the impact of our work. Data wrangling may seem tedious, but it’s essential for effective machine learning.

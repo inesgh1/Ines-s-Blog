@@ -32,8 +32,42 @@ Data wrangling is a critical first step because machine learning models rely on 
 For instance, think of how GPS systems rely on real-time, accurate data to provide directions. If the data is outdated or missing, the GPS will lead you astray. Similarly, for machine learning, inaccurate data can produce inaccurate predictions.
 
 ---
+## 2.Understanding Data Wrangling
 
-## 2. Tools for Data Wrangling 
+# Data Wrangling: Transforming Raw Data into Usable Formats
+
+Data wrangling, also known as data munging, is the process of converting raw data into a usable format. This involves several key steps, including data cleaning, data transformation, and data enrichment. The goal is to ensure that the data is accurate, consistent, and ready for analysis.
+
+---
+
+## Key Steps in Data Wrangling
+
+1. **Data Collection**: Gather data from various sources, such as databases, APIs, and web scraping. Ensure that the data is relevant to the problem at hand.
+
+2. **Data Cleaning**: Identify and rectify errors in the dataset. This includes handling missing values, removing duplicates, and correcting inconsistencies.
+
+3. **Data Transformation**: Convert data into a suitable format for analysis. This may involve normalizing values, encoding categorical variables, and aggregating data.
+
+4. **Data Enrichment**: Enhance the dataset by adding additional information from external sources. This can provide more context and improve the quality of the analysis.
+
+5. **Data Validation**: Ensure that the cleaned and transformed data meets the necessary quality standards. This step is crucial to avoid biases and inaccuracies in the model.
+
+---
+
+## Best Practices for Data Wrangling
+
+- **Automate Where Possible**: Utilize tools and libraries that can automate repetitive tasks in data wrangling, such as Pandas in Python or dplyr in R.
+
+- **Document Your Process**: Keep a record of the steps taken during data wrangling. This documentation will be invaluable for reproducibility and for future reference.
+
+- **Iterate and Refine**: Data wrangling is not a one-time process. Continuously refine your approach based on feedback and new insights.
+
+- **Engage with Domain Experts**: Collaborate with stakeholders who understand the data context. Their insights can guide the wrangling process and improve the relevance of the data.
+
+
+
+
+## 3. Tools for Data Wrangling 
 
 ### Explanation
 For this workshop, we’ll use Python’s `pandas` and `scikit-learn` libraries. `pandas` is popular for data manipulation, while `scikit-learn` provides a range of tools for preparing data and building models.
@@ -65,7 +99,7 @@ The dataset includes measurements like sepal length, sepal width, petal length, 
 
 **Objective**: Handle missing values, duplicates, and data type issues.
 
-### Script
+
 Let’s start with cleaning. Cleaning involves handling missing values, removing duplicates, and ensuring correct data types. Although our dataset is relatively clean, we’ll go through these steps for practice.
 
 ### 1. Identify Missing Values

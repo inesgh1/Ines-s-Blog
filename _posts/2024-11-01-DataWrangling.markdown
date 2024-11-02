@@ -210,9 +210,7 @@ With this accuracy score, we can see how well the model performed.
 
 ### Summary
 We’ve gone through each stage of data wrangling, from cleaning to feature engineering, and even applied a basic model to see the impact of our work. Data wrangling may seem tedious, but it’s essential for effective machine learning.
-
-### Discussion
-Any questions or thoughts on how these techniques can be applied in real-world projects?
+Access the workshop notebook [here](https://colab.research.google.com/drive/1nwIgxHmwwtP-i0kwEuxjVx-AwxdryITU?usp=sharing).
 
 ### Closing
 Thank you for joining! I hope this workshop gave you a strong foundation in data wrangling. With practice, these skills will allow you to prepare data for any AI or machine learning project.

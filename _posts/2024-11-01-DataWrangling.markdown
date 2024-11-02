@@ -3,7 +3,7 @@ layout: post
 title: Data Wrangling for Machine Learning – Preparing Data for AI Success
 date: 2024-11-01 
 description: This workshop presented as part of contribution to Wiempower Event
-img: DATA & AI.png # Add image post (optional)
+img: DATA&AI.png # Add image post (optional)
 tags: [Programming, Learn,flask,transformers] # add tag
 ---
 

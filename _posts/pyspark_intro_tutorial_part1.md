@@ -74,7 +74,7 @@ In PySpark, the `SparkSession` is the entry point to interact with Spark functio
 from pyspark.sql import SparkSession
 
 # Initialize SparkSession
-spark = SparkSession.builder     .master("local")     .appName("Introduction to PySpark")     .getOrCreate()
+spark = SparkSession.builder.master("local").appName("Introduction to PySpark").getOrCreate()
 
 # Check the SparkSession
 print("SparkSession Created:", spark)

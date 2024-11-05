@@ -3,7 +3,7 @@ layout: post
 title:Introduction to PySpark: Part 1 - Setting Up and Understanding the Basics
 date: 2024-11-05 
 description: This first part covers foundational concepts, basic setup, and hands-on exercises to give users a practical feel for working with PySpark.
-img:PysparkSeries.png.png # Add image post (optional)
+img:  PysparkSeries.png.png # Add image post (optional)
 tags: [Programming, Learn,pyspark] # add tag
 ---
 

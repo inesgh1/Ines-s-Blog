@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Advanced PySpark: Part 2 - DataFrame Transformations and Actions
+title: Part 2 - DataFrame Transformations and Actions
 date: 2024-11-11 
 description: This first part covers foundational concepts, basic setup, and hands-on exercises to give users a practical feel for working with PySpark.
 img:  PysparkSeries.png # Add image post (optional)

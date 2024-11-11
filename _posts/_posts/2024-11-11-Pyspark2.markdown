@@ -1,4 +1,11 @@
-
+---
+layout: post
+title:Advanced PySpark: Part 2 - DataFrame Transformations and Actions
+date: 2024-11-05 
+description: This first part covers foundational concepts, basic setup, and hands-on exercises to give users a practical feel for working with PySpark.
+img:  PysparkSeries.png # Add image post (optional)
+tags: [Programming, Learn,pyspark] # add tag
+---
 # **Advanced PySpark: Part 2 - DataFrame Transformations and Actions**
 
 Welcome back to our PySpark tutorial series! In Part 1, we covered the basics of setting up PySpark, creating a SparkSession, and performing basic operations on DataFrames. In **Part 2**, we’ll dive deeper into **DataFrame transformations** and **actions**—two core concepts for working with data in PySpark.

@@ -3,7 +3,7 @@ layout: post
 title: Transforming Businesses with SAP’s AI and cloud solution
 date: 2024-11-11 
 description: this is about Transforming Businesses with SAP’s AI and cloud solution
-img:  PysparkSeries.png # Add image post (optional)
+img:  sap4.png # Add image post (optional)
 tags: [AI, Learn,sap] # add tag
 ---
 # Transforming Businesses with SAP’s AI and

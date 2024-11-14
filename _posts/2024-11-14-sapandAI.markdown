@@ -24,7 +24,7 @@ RISE with SAP is a comprehensive transformation package designed to migrate lega
 - SAP S/4HANA Cloud: A modern ERP platform for managing business operations.
 - AI tools: Automate processes and generate insights.
 - Clean Core Principles: Streamlined systems for easier upgrades and flexibility.
-
+![success]({{site.baseurl}}/assets/img/AITools2.png)
 ### Benefits for HCM Teams
 
 - Simplified HR Processes: Accelerate tasks like payroll and employee onboarding.

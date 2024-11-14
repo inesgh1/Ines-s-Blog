@@ -117,6 +117,18 @@ Joule is an AI-powered assistant integrated into SAP environments. It acts as a 
 - 
 ![success]({{site.baseurl}}/assets/img/sap5.png)
 
+
+---
+
+## Conclusion
+
+SAP’s innovative solutions, including RISE with SAP, SAP BTP, and Joule, empower businesses to modernize operations, drive innovation, and optimize processes. By leveraging cloud technologies and AI, organizations can enhance internal efficiency and customer satisfaction.
+Businesses considering these solutions, evaluating current systems and understanding these offerings is key to unlocking their full potential.
+
+![success]({{site.baseurl}}/assets/img/sap6.png)
+
+
+---
 ## FAQs
 
 ### Who can use RISE with SAP?
@@ -136,16 +148,5 @@ No, Joule is included as part of SAP’s cloud subscription services. Pricing de
 ### Can on-premise customers use Joule?
 
 No, Joule is available only for SAP’s cloud-based environments.
-
----
-
-## Conclusion
-
-SAP’s innovative solutions, including RISE with SAP, SAP BTP, and Joule, empower businesses to modernize operations, drive innovation, and optimize processes. By leveraging cloud technologies and AI, organizations can enhance internal efficiency and customer satisfaction.
-
-![success]({{site.baseurl}}/assets/img/sap6.png)
-
-For businesses considering these solutions, evaluating current systems and understanding these offerings is key to unlocking their full potential.
-
 
 

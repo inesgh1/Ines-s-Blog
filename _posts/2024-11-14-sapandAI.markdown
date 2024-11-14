@@ -25,7 +25,7 @@ RISE with SAP is a comprehensive transformation package designed to migrate lega
 - AI tools: Automate processes and generate insights.
 - Clean Core Principles: Streamlined systems for easier upgrades and flexibility.
   
-![success]({{site.baseurl}}/assets/img/AITools2.png)
+![success]({{site.baseurl}}/assets/img/risewithsap.png)
 
 ### Benefits for HCM Teams
 
@@ -52,6 +52,9 @@ SAP integrates AI into customer support to provide faster and more effective sol
 - **Outbreak Detection**: Identifies and prevents potential widespread problems.
 - **Expert Finder**: Connects users with the right support specialists.
 - **Generative AI Search**: Uses advanced AI models to enhance search accuracy and speed.
+
+
+![success]({{site.baseurl}}/assets/img/AITools2.png)
 
 ### Results and Impact
 

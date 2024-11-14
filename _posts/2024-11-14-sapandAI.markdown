@@ -79,6 +79,9 @@ SAP BTP is a unified platform that helps businesses:
 - **Automate Tasks**: Reduce manual effort and speed up workflows.
 - **Leverage Data and AI**: Gain actionable insights and make smarter decisions.
 
+
+![success]({{site.baseurl}}/assets/img/sap3.png)
+
 ### Development Tools
 
 - **SAP Build**: Low-code tools to create apps and automate workflows.
@@ -97,6 +100,8 @@ SAP BTP is a unified platform that helps businesses:
 
 Joule is an AI-powered assistant integrated into SAP environments. It acts as a "copilot," helping users navigate and optimize workflows.
 
+![success]({{site.baseurl}}/assets/img/sap4.png)
+
 ### Availability
 
 - Designed for SAP customers using **SAP BTP** and **SAP S/4HANA Cloud**.
@@ -109,6 +114,8 @@ Joule is an AI-powered assistant integrated into SAP environments. It acts as a 
 ### Target Customers
 
 - Businesses leveraging SAP’s cloud solutions, particularly **SAP S/4HANA Cloud**.
+- 
+![success]({{site.baseurl}}/assets/img/sap5.png)
 
 ## FAQs
 
@@ -135,6 +142,10 @@ No, Joule is available only for SAP’s cloud-based environments.
 ## Conclusion
 
 SAP’s innovative solutions, including RISE with SAP, SAP BTP, and Joule, empower businesses to modernize operations, drive innovation, and optimize processes. By leveraging cloud technologies and AI, organizations can enhance internal efficiency and customer satisfaction.
+
+![success]({{site.baseurl}}/assets/img/sap6.png)
+
 For businesses considering these solutions, evaluating current systems and understanding these offerings is key to unlocking their full potential.
+
 
 

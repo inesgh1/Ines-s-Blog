@@ -45,10 +45,11 @@ RISE with SAP is a comprehensive transformation package designed to migrate lega
 ### AI-PoweredTools in SAP
 
 SAP integrates AI into customer support to provide faster and more effective solutions:
+
 	- Incident Solution Matching (ISM): Matches customer issues with the best solutions.
-    - Outbreak Detection: Identifies and prevents potential widespread problems.
+        - Outbreak Detection: Identifies and prevents potential widespread problems.
 	- Expert Finder: Connects users with the right support specialists.
-    - Generative AI Search: Uses advanced AI models to enhance search accuracy and speed.
+        - Generative AI Search: Uses advanced AI models to enhance search accuracy and speed.
 
 ### Results and Impact
 

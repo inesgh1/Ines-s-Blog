@@ -1,5 +1,12 @@
+---
+layout: post
+title: Preparing for a Data Scientist Role 
+date: 2022-10-09
+description: C'est un projet qui etait proposé comme etant un test technique pour le poste stagiaire data scientist
+img: velib.png # Add image post (optional)
+tags: [Programming,K-means,machine learning,interview,data science] # add tag
+---
 
-# Preparing for the Data Scientist Role at [Company Name]
 
 In my preparation for this exciting opportunity as a Data Scientist at [Company Name], I am focusing on mastering the following skills. This article documents my approach to each skill, detailing technical implementations and practical applications.
 

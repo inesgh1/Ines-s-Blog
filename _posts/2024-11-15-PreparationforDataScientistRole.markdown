@@ -8,7 +8,7 @@ tags: [Programming,K-means,machine learning,interview,data science] # add tag
 ---
 
 
-In my preparation for this exciting opportunity as a Data Scientist at [Company Name], I am focusing on mastering the following skills. This article documents my approach to each skill, detailing technical implementations and practical applications.
+In my preparation for this exciting opportunity as a Data Scientist , I am focusing on mastering the following skills. This article documents my approach to each skill, detailing technical implementations and practical applications.
 
 ---
 

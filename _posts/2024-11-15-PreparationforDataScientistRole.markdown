@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Preparing for a Data Scientist Role 
-date: 2022-10-09
+date: 2024-11-19
 description: C'est un projet qui etait proposé comme etant un test technique pour le poste stagiaire data scientist
 img: velib.png # Add image post (optional)
 tags: [Programming,K-means,machine learning,interview,data science] # add tag

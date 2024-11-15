@@ -3,7 +3,7 @@ layout: post
 title: Transforming Businesses with SAP’s AI and cloud solution 
 date: 2022-10-09
 description: this is about Transforming Businesses with SAP’s AI and cloud solution
-img: velib.png # Add image post (optional)
+img: sap3.png # Add image post (optional)
 tags: [Programming,K-means,machine learning,interview,data science] # add tag
 ---
 

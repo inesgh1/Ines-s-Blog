@@ -112,14 +112,14 @@
       add(q, 'user');
       history.push({ role: 'user', content: q });
 
-      // Instant, on-brand answers for the common stuff (free, no AI call).
-      var canned = ruleMatch(q);
-      if (canned) { setTimeout(function () { botSay(canned); }, 350); return; }
+      // No AI wired up → witty rule-based fallback (free, no AI call).
+      if (!AI_ENDPOINT) {
+        setTimeout(function () { botSay(ruleMatch(q) || randomFallback()); }, 350);
+        return;
+      }
 
-      // No AI wired up yet → witty fallback.
-      if (!AI_ENDPOINT) { setTimeout(function () { botSay(randomFallback()); }, 350); return; }
-
-      // Everything else → real AI via the Cloudflare Worker.
+      // AI is wired → send EVERYTHING to the real AI so answers are smart.
+      // Canned rules are only used if the AI call fails or returns nothing.
       var typing = showTyping();
       fetch(AI_ENDPOINT, {
         method: 'POST',
@@ -129,11 +129,11 @@
         .then(function (r) { return r.json(); })
         .then(function (d) {
           typing.parentNode && typing.parentNode.removeChild(typing);
-          botSay(d && d.reply ? d.reply : randomFallback());
+          botSay(d && d.reply ? d.reply : (ruleMatch(q) || randomFallback()));
         })
         .catch(function () {
           typing.parentNode && typing.parentNode.removeChild(typing);
-          botSay(randomFallback());
+          botSay(ruleMatch(q) || randomFallback());
         });
     }
     function openPanel() {

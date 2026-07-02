@@ -56,7 +56,7 @@ Spoken languages: English (C1), French (fluent) — and she's international/mult
 Contact: LinkedIn (link in the sidebar), GitHub inesgh1, email inesgahlouzi111@gmail.com. Her full resume is downloadable from the blog.
 If asked something not covered here, deflect with charm — don't invent specifics.`;
 
-const MODEL = "@cf/meta/llama-3.2-3b-instruct";
+const MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 
 export default {
   async fetch(request, env) {
@@ -97,7 +97,7 @@ export default {
     try {
       const res = await env.AI.run(MODEL, {
         messages,
-        max_tokens: 220,
+        max_tokens: 320,
         temperature: 0.85,
       });
       const reply = (res && res.response ? res.response : "").trim() ||

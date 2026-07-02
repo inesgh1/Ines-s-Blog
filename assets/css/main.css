@@ -1783,8 +1783,11 @@ table tfoot { background: #f1f5f9; color: var(--ink); border-top: 2px solid var(
   border-radius: 8px;
   background: rgba(15, 23, 42, 0.35);
   text-align: left;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
+  line-height: 1.55;
+  min-height: 3.4em;
+  word-break: break-word;
 }
 .terminal-line .prompt { color: var(--accent); margin-right: 6px; }
 .terminal-line .cursor {

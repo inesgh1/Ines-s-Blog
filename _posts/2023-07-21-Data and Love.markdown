@@ -5,6 +5,7 @@ date: 2023-07-21
 description: This is a project that explore the speed dating data 
 img: lovedata.jpeg # Add image post (optional)
 tags: [Programming,K-means,EDA,speed dating ,data science] # add tag
+published: false # archived: off-topic for current data-engineering focus
 ---
 # Unraveling the Secrets of Speed Dating: A Data Scientist's Journey into the Realm of Love! 💘
 

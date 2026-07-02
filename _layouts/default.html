@@ -8,5 +8,217 @@
   </div>
   
   {% include analytics.html %}
+
+  <!-- ines-bot: a tiny personality chatbot (client-side, no backend) -->
+  <div class="chatbot" id="chatbot">
+    <button class="chatbot-toggle" id="chatbot-toggle" aria-label="Chat with ines-bot">💬</button>
+    <div class="chatbot-panel" id="chatbot-panel" hidden>
+      <div class="chatbot-header">
+        <div>
+          <span class="chatbot-title">☕ ines-bot</span>
+          <span class="chatbot-status">powered by attitude, not GPUs</span>
+        </div>
+        <button class="chatbot-close" id="chatbot-close" aria-label="Close chat">&times;</button>
+      </div>
+      <div class="chatbot-log" id="chatbot-log"></div>
+      <div class="chatbot-chips" id="chatbot-chips">
+        <button type="button" data-q="who are you?">who are you?</button>
+        <button type="button" data-q="can I hire you?">hire you?</button>
+        <button type="button" data-q="coffee?">coffee?</button>
+        <button type="button" data-q="tell me about F1">F1?</button>
+        <button type="button" data-q="what do you work on?">your work?</button>
+      </div>
+      <form class="chatbot-form" id="chatbot-form">
+        <input id="chatbot-input" type="text" placeholder="ask me something..." autocomplete="off">
+        <button type="submit" aria-label="Send">&#10148;</button>
+      </form>
+    </div>
+  </div>
+  <script>
+  (function () {
+    var toggle = document.getElementById('chatbot-toggle');
+    if (!toggle) return;
+    var panel = document.getElementById('chatbot-panel');
+    var closeBtn = document.getElementById('chatbot-close');
+    var log = document.getElementById('chatbot-log');
+    var form = document.getElementById('chatbot-form');
+    var input = document.getElementById('chatbot-input');
+    var chips = document.getElementById('chatbot-chips');
+    var greeted = false;
+    var history = [];
+
+    // Paste your deployed Cloudflare Worker URL here to switch the bot to real AI.
+    // Leave empty to keep the free rule-based bot. See worker/README.md.
+    var AI_ENDPOINT = "https://ines-bot.inesgahlouzi.workers.dev";
+
+    var rules = [
+      { t: /(hire|job|available|recruit|work with|freelanc|opportunit)/i,
+        r: "looking to hire? bold move, i respect it. 💅 i build production data platforms across AWS, GCP & Azure. slide into my LinkedIn (icons in the sidebar) and let's talk." },
+      { t: /(coffee|espresso|caffeine|latte)/i,
+        r: "☕ my blood type is espresso. i don't debug before the first cup — that's just physics." },
+      { t: /(who are you|about you|yourself|who is ines|who's ines)/i,
+        r: "senior data engineer, part-time diva, full-time coffee enthusiast. i turn messy data into things that don't page you at 3am." },
+      { t: /(f1|formula|verstappen|racing|race|red bull)/i,
+        r: "🏎️ lights out and away we go — GO VERSTAPPEN. yes, i will absolutely talk your ear off about tyre strategy." },
+      { t: /(sql|data|pipeline|etl|database|schema|warehouse|medallion|architecture)/i,
+        r: "📊 i put the 'why' in WHERE. ask me about medallion architecture and watch me light up like a Grafana dashboard." },
+      { t: /(skincare|beauty|makeup|routine)/i,
+        r: "💄 my skincare routine has more steps than my ETL DAGs. both are non-negotiable and both glow up the output." },
+      { t: /(beach|sunset|sea|ocean|vacation)/i,
+        r: "🌊 best debugging happens near the sea. it's science. (it's not. but let me have this.)" },
+      { t: /(contact|email|linkedin|github|reach|connect)/i,
+        r: "📬 LinkedIn or the contact icons in the sidebar. i don't do small talk — i do schemas." },
+      { t: /(ai|machine learning|ml|llm|model|gpt)/i,
+        r: "🤖 AI + data is my whole personality (well, that and coffee). i build the boring-but-critical platform layer that keeps models from hallucinating on bad data." },
+      { t: /(hello|hi|hey|yo|sup)/i,
+        r: "hey 👋 ask me about coffee, data, F1, or whether you should hire me (you should)." },
+      { t: /(thank|thanks|ty)/i,
+        r: "anytime 💅 tell your friends. and your hiring manager." }
+    ];
+    var fallbacks = [
+      "i'm a tiny bot with big opinions. try asking about coffee, F1, data, or hiring me. ☕",
+      "hmm, that's above my pay grade (i work for espresso). try: 'can i hire you?' or 'F1?'",
+      "i speak SQL better than small talk. ask me about data, coffee, or Verstappen. 🏎️"
+    ];
+
+    function add(text, who) {
+      var msg = document.createElement('div');
+      msg.className = 'cb-msg cb-' + who;
+      msg.textContent = text;
+      log.appendChild(msg);
+      log.scrollTop = log.scrollHeight;
+      return msg;
+    }
+    function showTyping() {
+      var msg = document.createElement('div');
+      msg.className = 'cb-msg cb-bot cb-typing';
+      msg.innerHTML = '<span class="cb-typing-dots"><i></i><i></i><i></i></span>';
+      log.appendChild(msg);
+      log.scrollTop = log.scrollHeight;
+      return msg;
+    }
+    function ruleMatch(q) {
+      for (var i = 0; i < rules.length; i++) { if (rules[i].t.test(q)) return rules[i].r; }
+      return null;
+    }
+    function randomFallback() {
+      return fallbacks[Math.floor(Math.random() * fallbacks.length)];
+    }
+    function botSay(text) {
+      add(text, 'bot');
+      history.push({ role: 'assistant', content: text });
+    }
+    function ask(q) {
+      add(q, 'user');
+      history.push({ role: 'user', content: q });
+
+      // Instant, on-brand answers for the common stuff (free, no AI call).
+      var canned = ruleMatch(q);
+      if (canned) { setTimeout(function () { botSay(canned); }, 350); return; }
+
+      // No AI wired up yet → witty fallback.
+      if (!AI_ENDPOINT) { setTimeout(function () { botSay(randomFallback()); }, 350); return; }
+
+      // Everything else → real AI via the Cloudflare Worker.
+      var typing = showTyping();
+      fetch(AI_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: q, history: history.slice(-6) })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          typing.parentNode && typing.parentNode.removeChild(typing);
+          botSay(d && d.reply ? d.reply : randomFallback());
+        })
+        .catch(function () {
+          typing.parentNode && typing.parentNode.removeChild(typing);
+          botSay(randomFallback());
+        });
+    }
+    function openPanel() {
+      panel.hidden = false;
+      toggle.classList.add('open');
+      if (!greeted) {
+        greeted = true;
+        setTimeout(function () { add("hey 👋 i'm ines-bot — powered by attitude, not GPUs. ask me anything.", 'bot'); }, 250);
+      }
+      input.focus();
+    }
+    function closePanel() { panel.hidden = true; toggle.classList.remove('open'); }
+
+    toggle.addEventListener('click', function () { panel.hidden ? openPanel() : closePanel(); });
+    closeBtn.addEventListener('click', closePanel);
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var q = input.value.trim();
+      if (!q) return;
+      ask(q); input.value = '';
+    });
+    chips.addEventListener('click', function (e) {
+      if (e.target.tagName === 'BUTTON') ask(e.target.getAttribute('data-q'));
+    });
+  })();
+  </script>
+
+  <!-- Personality: typewriter terminal + rotating hero subtitle -->
+  <script>
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Sidebar terminal — loops through phrases
+    var target = document.querySelector('.type-target');
+    if (target && !reduce) {
+      var phrases = [
+        'building data platforms',
+        'turning chaos into clean schemas',
+        'powered by coffee & ambition',
+        'shipping across AWS · GCP · Azure',
+        'deploying faster than a Red Bull pit stop',
+        'the diva writes production SQL',
+        'go Verstappen 🏎️',
+        'sunsets > standups'
+      ];
+      var p = 0, c = 0, deleting = false;
+      (function tick() {
+        var word = phrases[p];
+        target.textContent = word.substring(0, c);
+        if (!deleting) {
+          if (c < word.length) { c++; setTimeout(tick, 55); }
+          else { deleting = true; setTimeout(tick, 1800); }
+        } else {
+          if (c > 0) { c--; setTimeout(tick, 28); }
+          else { deleting = false; p = (p + 1) % phrases.length; setTimeout(tick, 350); }
+        }
+      })();
+    }
+
+    // Homepage hero subtitle — picks a fresh line on every refresh, types it once
+    var hero = document.querySelector('.hero-rotate');
+    if (hero) {
+      var lines = [
+        '☕ coffeeholic. data architect. occasional diva.',
+        '📊 normalizing databases and my life.',
+        '🤖 building AI platforms. breaking nothing (hopefully).',
+        '🌊 engineering by day. sunset hunting by evening.',
+        '💅 making data prettier than it has any right to be.',
+        '☕ powered by espresso & questionable amounts of ambition.',
+        '🏎️ deploying faster than a Red Bull pit stop.',
+        '💄 skincare routine longer than my query runtimes.',
+        '🌍 fluent in SQL, sarcasm & a few human languages.'
+      ];
+      var pick = lines[Math.floor(Math.random() * lines.length)];
+      if (reduce) { hero.textContent = pick; }
+      else {
+        var i = 0;
+        hero.textContent = '';
+        (function type() {
+          hero.textContent = pick.substring(0, i);
+          if (i < pick.length) { i++; setTimeout(type, 42); }
+        })();
+      }
+    }
+  })();
+  </script>
 </body>
 </html>

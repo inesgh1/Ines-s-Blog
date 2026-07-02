@@ -1,0 +1,8 @@
+name = "ines-bot"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+# Binds Cloudflare Workers AI to `env.AI` (used in src/index.js).
+# Workers AI has a free daily allowance that easily covers a personal blog.
+[ai]
+binding = "AI"

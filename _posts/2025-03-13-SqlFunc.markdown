@@ -1,188 +1,181 @@
-
 ---
 layout: post
-title: Cheat Sheet: Problems, Fixes, Trigger Comparison, and Implementation Details 
-date: 2025-11-15
-description: C'est un projet qui etait proposé comme etant un test technique pour le poste stagiaire data scientist
-img: velib.png # Add image post (optional)
-tags: [Programming,K-means,machine learning,interview,data science] # add tag
-published: false # archived: off-topic for current data-engineering focus
+title: "Debugging a SQL-Triggered Azure Function: Real Bugs from an Event-Driven Pipeline"
+date: 2025-03-13
+description: A field report from building a real-time, event-driven pipeline on Azure Functions — a SQL trigger feeding mood analysis into a FHIR server. The bugs were subtle, the logs were misleading, and every fix taught me something about event-driven systems.
+img: software.jpg # Add image post (optional)
+tags: [Data Engineering, Azure Functions, SQL Trigger, Event-Driven, FHIR, Debugging] # add tag
+---
+
+# Debugging a SQL-Triggered Azure Function: Real Bugs from an Event-Driven Pipeline
+
+Batch pipelines fail loudly. Event-driven ones fail *quietly* — a trigger keeps firing, the logs look almost normal, and nothing actually happens. This post is a field report from a real pipeline I built and debugged: an **Azure Function** triggered by inserts into a SQL table, running mood analysis on incoming chat messages and pushing the results to a **FHIR** healthcare server.
+
+The architecture was simple on paper:
+
+```
+dbo.messages (INSERT)  ──SQL trigger──▶  Azure Function
+                                            │  parse change event
+                                            │  filter sender = 'user'
+                                            │  analyze mood (Azure OpenAI)
+                                            ▼
+                                     FHIR Observation  ──POST──▶  FHIR server
+```
+
+And yet for the first day it processed exactly zero messages while *looking* like it was working. Here's every bug I hit, how I found it, and what it taught me.
+
+## Bug #1 — The case-sensitivity trap that ate every message
+
+**Symptom:** the logs were full of `Change missing 'operation' field` — even though I could see perfectly valid change events arriving.
+
+**Investigation:** I dumped the raw payload the SQL trigger actually delivers. This is what it looked like:
+
+```json
+[
+  {
+    "Operation": 0,
+    "Item": {
+      "id": "2820eb1c-f63c-4178-8b34-a21ebd8cb9e2",
+      "sender": "user",
+      "message": "Am tired",
+      "created_at": "2025-03-13T13:33:23.389+01:00"
+    }
+  }
+]
+```
+
+There it was: the trigger sends `"Operation"` with a **capital O**. My code was reading `change.get("operation")` — lowercase. That returned `None`, my `if not operation:` guard fired, and the message was silently skipped. Every single time.
+
+**Fix:** handle both casings defensively at the boundary, since the payload shape isn't mine to control:
+
+```python
+operation = change.get("operation") or change.get("Operation")
+```
+
+> **Lesson:** at any integration boundary, the payload shape is a contract someone else owns. Never assume field casing — log the raw event once, verify it, and code defensively against what actually arrives, not what the docs imply.
+
+## Bug #2 — The "infinite loop" that was really an early exit
+
+**Symptom:** the function seemed to hang forever, processing nothing. It *felt* like an infinite loop.
+
+**Investigation:** there was no loop. Because Bug #1 made JSON handling bail out early, the trigger kept re-firing on the same backlog of changes, never advancing past the parse step. No logs appeared beyond the `missing 'operation'` line — which is exactly what "stuck" looks like in an event-driven system.
+
+**Fix:** once parsing was corrected, I added an explicit empty-batch guard so a genuinely empty `changes_list` short-circuits instead of spinning:
+
+```python
+changes_list = json.loads(changes)
+if not changes_list:
+    logging.info("Empty change batch — nothing to process.")
+    return
+```
+
+> **Lesson:** in event-driven systems, "hanging" is usually an early exit in disguise. If you can't see a step in the logs, assume execution never reached it — don't assume it's slow.
+
+## Bug #3 — Sender filtering that never ran
+
+**Symptom:** messages from `sender = 'assistant'` were (apparently) getting through, not just `'user'` messages.
+
+**Root cause:** my in-code filter `if sender != "user"` was correct — but it lived *after* the parsing step that Bug #1 was aborting, so it never executed. There was also no database-level filter as a safety net.
+
+**Fix:** I strengthened the in-code check and added logging to confirm the actual `sender` values flowing through, so I could *see* the filter doing its job rather than trust it blindly.
+
+> **Lesson:** a filter you can't observe is a filter you don't trust. Log what it lets through and what it drops, at least until you've seen it behave in production.
+
+## Bug #4 & #5 — The FHIR server fought back
+
+Once messages finally flowed end-to-end, the FHIR upload surfaced two environment problems:
+
+- **`Sorry, you have been blocked`** — a Cloudflare block, caused by pointing at a raw `http://3.142.231.50:80` address with a questionable auth token.
+- **`Not Found`** — an Apache 404 from a `FHIR_SERVER_URL` aimed at an endpoint that didn't exist.
+
+**Fix:** use a valid **HTTPS** FHIR base URL, verify the auth token, and — critically — reproduce the call outside the function first:
+
+```bash
+curl -i -H "Authorization: Bearer $FHIR_AUTH_TOKEN" \
+     https://your-fhir-server/fhir/metadata
+```
+
+If `curl` can't reach it, your function never will.
+
+> **Lesson:** isolate the external dependency before blaming your own code. A one-line `curl` would have saved me an hour of re-reading Python that was already correct.
+
+## The bigger design question: SQL trigger vs. timer trigger
+
+Half the value of this exercise was deciding *how* the pipeline should be driven at all. Here's the comparison I landed on:
+
+| Aspect            | Timer Trigger                                   | SQL Trigger                                     |
+|-------------------|-------------------------------------------------|-------------------------------------------------|
+| Trigger mechanism | Runs on a schedule (e.g. every 5s)              | Runs on changes to a table (`dbo.messages`)     |
+| Event source      | Time-based (cron)                               | Data-based (INSERT / UPDATE / DELETE)           |
+| Processing style  | Polls for new data                              | Reacts immediately to each change               |
+| Best for          | Periodic tasks, batch catch-up                  | Real-time reaction to new rows                  |
+| Scalability       | Bounded by polling frequency                    | Scales with the database change rate            |
+| Complexity        | Simpler; you fetch data manually                | Handles multiple change events; needs JSON parsing |
+
+**Where I landed:** a timer trigger is *proactive and periodic* — you write custom logic to go fetch new data. A SQL trigger is *reactive and event-driven* — changes come to you. Because the requirement was to process messages the moment they arrive, the SQL trigger won. The cost of that choice is exactly the class of bugs above: you inherit whatever payload shape the change-tracking layer hands you.
+
+## The setup, for reference
+
+The trigger itself is a few lines:
+
+```python
+import azure.functions as func
+
+app = func.FunctionApp()
+
+@app.sql_trigger(
+    arg_name="changes",
+    table_name="dbo.messages",
+    connection_string_setting="SqlConnectionString",
+)
+def chat_with_knowbot_sql_trigger(changes: str) -> None:
+    changes_list = json.loads(changes)
+    if not changes_list:
+        return
+    for change in changes_list:
+        operation = change.get("operation") or change.get("Operation")
+        if operation is None:
+            logging.warning("Change missing operation field: %s", change)
+            continue
+        item = change.get("item") or change.get("Item", {})
+        if item.get("sender") != "user":
+            continue
+        # ... mood analysis + FHIR upload ...
+```
+
+Configuration lives in `local.settings.json` (never in code):
+
+```json
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "SqlConnectionString": "DRIVER={ODBC Driver 18 for SQL Server};SERVER=your-server;PORT=1433;DATABASE=your-database;UID=your-username;PWD=your-password;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;",
+    "FHIR_SERVER_URL": "https://your-fhir-server/fhir",
+    "FHIR_AUTH_TOKEN": "your-token"
+  }
+}
+```
+
+And the Python dependencies:
+
+```
+azure-functions==1.17.0
+openai==1.14.0
+requests==2.31.0
+pyodbc==5.1.0
+python-dotenv==1.0.0
+```
+
+## What I'd carry into the next event-driven build
+
+1. **Log the raw event once, on day one.** Every bug here traced back to assuming the payload shape instead of looking at it.
+2. **Treat "nothing happened" as an early exit, not slowness.** Add a log line at every stage boundary so silence is diagnostic.
+3. **Push filtering as close to the source as possible.** An in-code `sender = 'user'` check works, but a database-level view or filter is a safety net that survives code bugs.
+4. **Reproduce external calls outside the function.** `curl` first, debug your code second.
+
+Event-driven pipelines are wonderful when they work and maddening when they don't — because the failure mode is silence. The fix, every time, was to make the invisible visible: log the payload, log each stage, and test each dependency in isolation.
 
 ---
 
-# Cheat Sheet: Problems, Fixes, Trigger Comparison, and Implementation Details
-
-## Problems Encountered and Fixes
-
-| **Problem**                              | **Symptoms**                                                                 | **Root Cause**                                                                 | **Fix**                                                                                           | **Impact**                              |
-|------------------------------------------|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|-----------------------------------------|
-| **JSON Parsing Issue (Operation vs. operation)** | Logs showed "Change missing 'operation' field" despite valid data.           | SQL trigger sent `"Operation"` (uppercase) while code expected `"operation"` (lowercase). | Updated code to handle both `"operation"` and `"Operation"` using `change.get("operation") or change.get("Operation")`. | Enabled message processing by fixing the JSON parsing mismatch. |
-| **Infinite Loop / Messages Not Processed** | Function appeared to wait indefinitely, processing no messages.             | Early exit due to JSON parsing failure prevented further execution.           | Ensured proper JSON parsing and added a check for empty `changes_list` to avoid unnecessary loops. | Allowed real-time processing of new messages as they arrive. |
-| **Sender Filtering Not Working**          | Processed messages from `sender = 'assistant'` and others, not just `'user'`.| In-code filtering (`if sender != "user"`) wasn’t reached due to parsing issue; no database-level filter. | Strengthened in-code check with strict `sender != "user"` and added logging to verify sender values. | Ensured only `sender = 'user'` messages are processed. |
-| **FHIR Observation Not Sent**             | No FHIR-related logs; mood analysis and upload never executed.              | Processing halted early, preventing FHIR logic execution; potential server issues. | Fixed parsing to reach FHIR steps; added detailed logging and verified `FHIR_SERVER_URL`/`TOKEN`. | Enabled mood analysis and FHIR upload for qualifying messages. |
-| **FHIR Server Blocking**                  | "Sorry, you have been blocked" error (Cloudflare).                         | Incorrect `FHIR_SERVER_URL` (e.g., `http://3.142.231.50:80`) or invalid `FHIR_AUTH_TOKEN`. | Recommended using a valid HTTPS URL and testing manually with `curl`.                            | Resolved once environment variables are corrected. |
-| **Page Not Found**                        | "Not Found" error (Apache server).                                         | `FHIR_SERVER_URL` pointed to an invalid endpoint.                            | Suggested verifying and updating `FHIR_SERVER_URL` to a working FHIR server endpoint.            | Ensured correct server communication.  |
-
-## Differences Between Timer Trigger and SQL Trigger
-
-| **Aspect**            | **Timer Trigger**                                   | **SQL Trigger**                                     |
-|-----------------------|----------------------------------------------------|----------------------------------------------------|
-| **Trigger Mechanism** | Executes on a scheduled interval (e.g., every 5s). | Executes on changes to a specified SQL table (e.g., `dbo.messages`). |
-| **Event Source**      | Time-based (cron schedule).                        | Data-based (INSERT, UPDATE, DELETE on table).      |
-| **Processing Style**  | Polls for new data (e.g., latest unprocessed message). | Reacts immediately to each change event.           |
-| **Use Case**          | Periodic tasks (e.g., checking for updates).       | Real-time data processing (e.g., mood analysis on new messages). |
-| **Parameter**         | `func.TimerRequest` (contains schedule info).      | `str` (JSON string of changes).                    |
-| **Scalability**       | Less reactive; depends on polling frequency.       | Highly reactive; scales with database change rate. |
-| **Complexity**        | Simpler for periodic tasks; manual data fetch needed (e.g., `get_latest_user_message`). | More complex due to handling multiple change events; requires JSON parsing. |
-
-- **Key Difference**: The timer trigger is proactive and periodic, requiring custom logic to fetch new data (e.g., `get_latest_user_message`), while the SQL trigger is reactive and event-driven, processing changes as they occur. Your requirement for simultaneous processing favors the SQL trigger.
-
-## Necessary Files, Parameters, and Coding Details
-
-### Necessary Files
-
-1. **`function_app.py`**:
-   - Main file containing the Azure Function definition.
-   - Includes imports, environment variables, helper functions (`analyze_patient_mood`, `create_fhir_observation`, `send_to_fhir`), and the trigger function (`chat_with_knowbot_sql_trigger`).
-   - **Example Structure**:
-     ```python
-     import azure.functions as func
-     # ... other imports ...
-     app = func.FunctionApp()
-     @app.sql_trigger(arg_name="changes", table_name="dbo.messages", connection_string_setting="SqlConnectionString")
-     def chat_with_knowbot_sql_trigger(changes: str) -> None:
-         # Function logic
-     ```
-
-2. **`.env` or `local.settings.json`**:
-   - Stores environment variables for secure configuration.
-   - **Example `.env`**:
-     ```
-     AZURE_OPENAI_ENDPOINT=https://your-openai-endpoint
-     AZURE_OPENAI_API_KEY=your-api-key
-     AZURE_API_VERSION=2024-02-01
-     SERVER=your-server
-     DATABASE=your-database
-     USERNAME1=your-username
-     PASSWORD=your-password
-     FHIR_SERVER_URL=https://your-fhir-server/fhir
-     FHIR_AUTH_TOKEN=your-token
-     ```
-   - **Example `local.settings.json`**:
-     ```json
-     {
-       "IsEncrypted": false,
-       "Values": {
-         "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-         "SqlConnectionString": "DRIVER={ODBC Driver 18 for SQL Server};SERVER=your-server;PORT=1433;DATABASE=your-database;UID=your-username;PWD=your-password;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;",
-         "FHIR_SERVER_URL": "https://your-fhir-server/fhir",
-         "FHIR_AUTH_TOKEN": "your-token"
-       }
-     }
-     ```
-
-3. **`host.json`** (Optional):
-   - Configures function app settings (e.g., logging, extensions).
-   - **Example**:
-     ```json
-     {
-       "version": "2.0",
-       "logging": {
-         "applicationInsights": {
-           "samplingSettings": {
-             "isEnabled": true
-           }
-         }
-       },
-       "extensions": {
-         "sql": {
-           "connectionStringSetting": "SqlConnectionString"
-         }
-       }
-     }
-     ```
-
-4. **`requirements.txt`**:
-   - Lists Python dependencies.
-   - **Example**:
-     ```
-     azure-functions==1.17.0
-     openai==1.14.0
-     requests==2.31.0
-     pyodbc==5.1.0
-     python-dotenv==1.0.0
-     ```
-
-### Parameters
-
-- **`changes` (str)**:
-  - Passed to the SQL trigger function as a JSON string containing a list of change events.
-  - **Example from Logs**:
-    ```json
-    [
-      {
-        "Operation": 0,
-        "Item": {
-          "id": "2820eb1c-f63c-4178-8b34-a21ebd8cb9e2",
-          "user_id": "bfe7385c-e544-44b2-bb36-8463781be9e2",
-          "sender": "user",
-          "message": "Am tired",
-          "date": "2025-03-13T00:00:00",
-          "time": "1:33 PM",
-          "created_at": "2025-03-13T13:33:23.389+01:00"
-        }
-      }
-    ]
-    ```
-  - Contains `Operation` (e.g., 0 for INSERT) and `Item` (message details).
-
-- **Environment Variables**:
-  - Accessed via `os.getenv()` (e.g., `FHIR_SERVER_URL`, `FHIR_AUTH_TOKEN`).
-  - Must be set in `.env` or `local.settings.json`.
-
-### Coding Details
-
-- **SQL Trigger Definition**:
-  - Use `@app.sql_trigger` decorator with parameters:
-    - `arg_name`: Name of the parameter (e.g., `"changes"`).
-    - `table_name`: Target SQL table (e.g., `"dbo.messages"`).
-    - `connection_string_setting`: Name of the setting containing the SQL connection string (e.g., `"SqlConnectionString"`).
-  - **Example**:
-    ```python
-    @app.sql_trigger(arg_name="changes", table_name="dbo.messages", connection_string_setting="SqlConnectionString")
-    def chat_with_knowbot_sql_trigger(changes: str) -> None:
-        # Logic here
-    ```
-
-- **Processing Logic**:
-  - Parse `changes` with `json.loads(changes)`.
-  - Iterate over `changes_list` to handle each change.
-  - Check `operation` (e.g., `== 0` for INSERT) and `item` fields.
-  - Filter `sender == "user"` and process mood analysis/FHIR upload.
-
-- **FHIR Upload**:
-  - Use `requests.post` with `FHIR_SERVER_URL`, headers, and JSON payload.
-  - Handle exceptions with `requests.exceptions.RequestException`.
-
-## Why It Didn’t Work Initially
-
-1. **`"Operation"` vs. `"operation"` Error**:
-   - **Cause**: The SQL trigger provided JSON with `"Operation"` (uppercase), but the code checked for `"operation"` (lowercase) using `change.get("operation")`. Since no match was found, `operation` was `None`, triggering the `if not operation:` condition and skipping the message.
-   - **Evidence**: Logs showed `"Change missing 'operation' field"` despite valid `Operation: 0`.
-   - **Fix**: Added fallback with `change.get("operation") or change.get("Operation")` to handle case sensitivity.
-
-2. **Early Exit**:
-   - **Cause**: The early exit due to the JSON parsing mismatch prevented the code from reaching the sender filtering, mood analysis, and FHIR upload steps, creating the appearance of an infinite loop as the trigger kept firing without processing.
-   - **Evidence**: No logs beyond `"Change missing 'operation' field"`.
-   - **Fix**: Corrected JSON parsing and ensured the loop completed for each batch.
-
-3. **Environment Misconfiguration**:
-   - **Cause**: Potential issues with `FHIR_SERVER_URL` (e.g., `http://3.142.231.50:80`) and `FHIR_AUTH_TOKEN` caused FHIR failures when processing would have occurred.
-   - **Evidence**: Documents showed "Sorry, you have been blocked" and "Page not found".
-   - **Fix**: Recommended verifying and updating environment variables.
-
-## Final Notes
-
-- **Testing**: Continue testing with new messages and monitor logs for FHIR success.
-- **Optimization**: Consider adding a database-level filter (e.g., a view with `WHERE sender = 'user'`) if supported by your SQL trigger setup.
-- **Support**: Share logs or errors if further issues arise!
+*I build production data platforms and pipelines across AWS, GCP, and Azure. If you're wiring up event-driven systems and hitting the quiet-failure wall, I'd like to compare notes — [find me on LinkedIn](https://www.linkedin.com/in/ines-gahlouzi/).*

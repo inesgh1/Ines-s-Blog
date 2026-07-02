@@ -1,6 +1,18 @@
 ---
 layout: main
 ---
+{% if paginator.page == 1 %}
+<section class="home-hero">
+  <h1 class="hero-name">Hi, I'm Ines<span class="dot">.</span></h1>
+  <div class="hero-sub"><span class="prompt">&gt;</span> <span class="hero-rotate">data architect</span><span class="cursor"></span></div>
+  <p class="hero-intro">I build production-grade AI data platforms across AWS, GCP &amp; Azure — turning messy data into systems that don't page you at 3am. This is where I write about the architecture, the trade-offs, and the occasional war story.</p>
+  <div class="hero-cta">
+    <a class="hero-btn" href="#latest">Read the blog ↓</a>
+    <a class="hero-btn ghost" href="{{site.social-linkedin}}" target="_blank">Let's connect</a>
+  </div>
+</section>
+{% endif %}
+<span id="latest"></span>
 {% for post in paginator.posts %}
 <article class="post">
   {% if post.img %}
@@ -12,6 +24,13 @@ layout: main
     <p>{{ post.content | strip_html | truncatewords: 15 }}</p>
     <span class="post-date">{{post.date | date: '%Y, %b %d'}}&nbsp;&nbsp;&nbsp;—&nbsp;</span>
     <span class="post-words">{% capture words %}{{ post.content | number_of_words }}{% endcapture %}{% unless words contains "-" %}{{ words | plus: 250 | divided_by: 250 | append: " minute read" }}{% endunless %}</span>
+    {% if post.tags.size > 0 %}
+    <div class="post-tags">
+      {% for tag in post.tags limit:4 %}
+        <a class="post-tag" href="{{site.baseurl}}/tags#{{tag}}">{{ tag }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
   </div>
 </article>
 {% endfor %}

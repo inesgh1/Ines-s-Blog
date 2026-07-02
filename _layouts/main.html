@@ -10,6 +10,7 @@ layout: default
       </div>
       <div class="author-name">{{site.author}}</div>
       <p>{{site.about-author}}</p>
+      <div class="terminal-line"><span class="prompt">&gt;</span> <span class="type-target">building data platforms</span><span class="cursor"></span></div>
     </div>
   </header> <!-- End Header -->
   <footer>
@@ -41,3 +42,41 @@ layout: default
 <div class="content-box clearfix">
   {{ content }}
 </div>
+<aside class="info-rail">
+  <div class="rail-card">
+    <h4 class="rail-title">// tech stack</h4>
+    <div class="rail-pills">
+      <span>AWS</span><span>GCP</span><span>Azure</span>
+      <span>PostgreSQL</span><span>Kubernetes</span>
+      <span>Python</span><span>Spark</span><span>Airflow</span>
+    </div>
+  </div>
+  <div class="rail-card">
+    <h4 class="rail-title">// topics</h4>
+    <div class="rail-tags">
+      {% assign sorted_tags = site.tags | sort %}
+      {% for tag in sorted_tags limit:12 %}
+        <a href="{{site.baseurl}}/tags#{{tag[0]}}">{{ tag[0] }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="rail-card whoami">
+    <h4 class="rail-title">// whoami</h4>
+    <ul class="whoami-list">
+      <li>☕ coffee-powered</li>
+      <li>🧠 ambitious AF</li>
+      <li>📊 obsessed with clean schemas</li>
+      <li>🌍 international &amp; multilingual</li>
+      <li>🌊 beach &amp; sunsets</li>
+      <li>🤖 AI + data geek</li>
+      <li>🏎️ F1 addict — go Verstappen</li>
+      <li>💅 the diva writes prod SQL too</li>
+    </ul>
+  </div>
+  <div class="rail-card rail-cta">
+    <h4 class="rail-title">// let's connect</h4>
+    <a class="rail-btn" href="{{site.social-linkedin}}" target="_blank">LinkedIn</a>
+    <a class="rail-btn ghost" href="http://github.com/{{site.social-github}}" target="_blank">GitHub</a>
+    <a class="rail-btn" href="{{site.baseurl}}/assets/files/Ines_Gahlouzi_Resume.pdf" target="_blank" download>📄 Résumé</a>
+  </div>
+</aside> <!-- End Info Rail -->
